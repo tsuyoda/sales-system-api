@@ -1,0 +1,31 @@
+version: '3'
+services:
+  api:
+    ports:
+      - 7777:7777
+    build:
+      context: .
+      dockerfile: docker/dev/Dockerfile
+    environment:
+      - DB_HOST=mongodb
+      - DB_PORT=27017
+    volumes:
+      - .:/app
+    depends_on:
+      - 'mongodb'
+    networks:
+      - development-network
+  mongodb:
+    image: mongo
+    ports:
+      - 27019:27017
+    volumes:
+      - mongodb:/data/db
+    restart: always
+    networks:
+      - development-network
+volumes:
+  mongodb:
+networks:
+  development-network:
+    driver: bridge

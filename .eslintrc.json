@@ -1,0 +1,89 @@
+{
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint"],
+  "extends": ["prettier/@typescript-eslint", "plugin:prettier/recommended"],
+  "parserOptions": {
+    "ecmaVersion": 2018,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "rules": {
+    "eqeqeq": "off",
+    "no-restricted-globals": "error",
+    "linebreak-style": ["error", "unix"],
+    "max-lines": ["error", 300],
+    "max-len": [
+      "warn",
+      80,
+      2,
+      {
+        "ignorePattern": "^(import|export)",
+        "ignoreUrls": true
+      }
+    ],
+    "no-multiple-empty-lines": [
+      "error",
+      {
+        "max": 1
+      }
+    ],
+    "no-trailing-spaces": ["error"],
+    "no-var": ["error"],
+    "quote-props": ["error", "as-needed"],
+    "object-shorthand": ["error"],
+    "no-return-await": ["error"],
+    "@typescript-eslint/no-unused-vars": ["error"],
+    "@typescript-eslint/adjacent-overload-signatures": ["error"],
+    "@typescript-eslint/interface-name-prefix": ["error", "always"],
+    "no-useless-escape": "error",
+    "@typescript-eslint/no-useless-constructor": "error",
+    "@typescript-eslint/no-empty-interface": "off",
+    "@typescript-eslint/no-object-literal-type-assertion": "off",
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/no-require-imports": "off",
+    "@typescript-eslint/no-var-requires": "off",
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/explicit-member-accessibility": [
+      "error",
+      {
+        "accessibility": "off"
+      }
+    ],
+    "@typescript-eslint/member-ordering": [
+      "error",
+      {
+        "default": [
+          "public-static-method",
+          "protected-static-method",
+          "private-static-method",
+          "public-static-field",
+          "protected-static-field",
+          "private-static-field",
+          "public-instance-field",
+          "protected-instance-field",
+          "private-instance-field",
+          "public-field",
+          "protected-field",
+          "private-field",
+          "static-field",
+          "instance-field",
+          "field",
+          "constructor",
+          "public-instance-method",
+          "protected-instance-method",
+          "private-instance-method",
+          "public-method",
+          "protected-method",
+          "private-method",
+          "static-method",
+          "instance-method",
+          "method"
+        ]
+      }
+    ],
+    "@typescript-eslint/no-namespace": ["error"]
+  },
+  "settings": {}
+}
