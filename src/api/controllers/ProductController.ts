@@ -7,7 +7,7 @@ import ProductValidator from '../validators/ProductValidator';
 class ProductController extends Controller {
   async create(req: Request, res: Response, next: NextFunction) {
     try {
-      const data = await ProductValidator.create(req);
+      const data = ProductValidator.create(req);
 
       const product = await ProductService.create(data);
 
@@ -19,7 +19,7 @@ class ProductController extends Controller {
 
   async show(req: Request, res: Response, next: NextFunction) {
     try {
-      const { id } = await ProductValidator.showOrDelete(req);
+      const { id } = ProductValidator.showOrDelete(req);
 
       const product = await ProductService.show(id);
 
@@ -31,7 +31,7 @@ class ProductController extends Controller {
 
   async list(req: Request, res: Response, next: NextFunction) {
     try {
-      const data = await ProductValidator.list(req);
+      const data = ProductValidator.list(req);
 
       const products = await ProductService.list(data);
 
@@ -43,7 +43,7 @@ class ProductController extends Controller {
 
   async delete(req: Request, res: Response, next: NextFunction) {
     try {
-      const { id } = await ProductValidator.showOrDelete(req);
+      const { id } = ProductValidator.showOrDelete(req);
 
       const product = await ProductService.delete(id);
 
@@ -55,7 +55,7 @@ class ProductController extends Controller {
 
   async update(req: Request, res: Response, next: NextFunction) {
     try {
-      const data = await ProductValidator.update(req);
+      const data = ProductValidator.update(req);
 
       const product = await ProductService.update(data);
 
