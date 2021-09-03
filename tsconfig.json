@@ -16,16 +16,10 @@
     "inlineSources": true,
     "skipLibCheck": true,
     "alwaysStrict": true,
-    "strict": false,
-    "outDir": "./dist",
+    "strict": true,
+    "outDir": "./dist"
   },
   "compileOnSave": false,
-  "include": [
-    "src/**/*.ts"
-  ],
-  "exclude": [
-    "dist",
-    "node_modules",
-    "node_modules_prod"
-  ]
+  "include": ["src/**/*.ts"],
+  "exclude": ["dist", "node_modules", "node_modules_prod"]
 }

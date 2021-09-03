@@ -6,15 +6,10 @@ import { Request } from 'express';
 class ProductValidator {
   async create(req: Request) {
     const schema = Yup.object({
-      title: Yup.string().typeError('title is invalid').required('title is required'),
-      description: Yup.string()
-        .typeError('description is invalid')
-        .required('description is required'),
-      value: Yup.number().typeError('value is invalid').required('value is required'),
-      amount: Yup.number()
-        .integer('amount is invalid')
-        .typeError('amount is invalid')
-        .required('amount is required'),
+      title: Yup.string().required(),
+      description: Yup.string().required(),
+      value: Yup.number().required(),
+      amount: Yup.number().integer().required(),
     });
 
     return schema.validate(req.body).catch(err => {
@@ -24,16 +19,13 @@ class ProductValidator {
 
   async update(req: Request) {
     const schema = Yup.object({
-      id: Yup.string().typeError('id is invalid').required('id is required'),
-      title: Yup.string().typeError('title is invalid').required('title is required'),
-      description: Yup.string()
-        .typeError('description is invalid')
-        .required('description is required'),
-      value: Yup.number().typeError('value is invalid').required('value is required'),
-      amount: Yup.number()
-        .integer('amount is invalid')
-        .typeError('amount is invalid')
-        .required('amount is required'),
+      id: Yup.string()
+        .matches(/^[0-9a-fA-F]{24}$/, 'id must be a ObjectId')
+        .required(),
+      title: Yup.string().required(),
+      description: Yup.string().required(),
+      value: Yup.number().required(),
+      amount: Yup.number().integer().required(),
     });
 
     return schema.validate({ ...req.body, ...req.params }).catch(err => {
@@ -43,18 +35,24 @@ class ProductValidator {
 
   async list(req: Request) {
     const schema = Yup.object({
-      title: Yup.string().typeError('title is invalid').optional(),
+      title: Yup.string().optional(),
     });
 
-    return schema.validate(req.query);
+    return schema.validate(req.query).catch(err => {
+      throw new ApiError(400, err.message);
+    });
   }
 
   async showOrDelete(req: Request) {
     const schema = Yup.object({
-      id: Yup.string().typeError('id is invalid').required('id is required'),
+      id: Yup.string()
+        .matches(/^[0-9a-fA-F]{24}$/, 'id must be a ObjectId')
+        .required(),
     });
 
-    return schema.validate(req.params);
+    return schema.validate(req.params).catch(err => {
+      throw new ApiError(400, err.message);
+    });
   }
 }
 

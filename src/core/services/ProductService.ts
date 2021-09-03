@@ -1,21 +1,27 @@
-import { IDbProduct, IProduct, IProductListData } from '../interfaces/IProduct';
+import {
+  IDbProduct,
+  IProductData,
+  IProductParams,
+  IProductSearchFields,
+} from '../interfaces/IProduct';
 
 import ApiError from '../exceptions/ApiError';
-import Product from '../models/productModel';
+import ProductModel from '../models/productModel';
+import { Schema } from 'mongoose';
 
 class ProductService {
-  async create(data: IProduct): Promise<IDbProduct> {
+  async create(data: IProductData): Promise<IDbProduct> {
     const { title } = data;
 
-    if (await Product.findOne({ title })) {
+    if (await ProductModel.findOne({ title })) {
       throw new ApiError(400, 'title already in use');
     }
 
-    return Product.create(data);
+    return ProductModel.create(data);
   }
 
-  async show(productId: string): Promise<IDbProduct> {
-    const product = await Product.findById(productId);
+  async update(id: string | Schema.Types.ObjectId, data: IProductData): Promise<IDbProduct> {
+    const product = await ProductModel.findByIdAndUpdate(id, data);
 
     if (!product) {
       throw new ApiError(404, 'product not found');
@@ -24,21 +30,21 @@ class ProductService {
     return product;
   }
 
-  async list(data: IProductListData): Promise<IDbProduct[]> {
+  async list(data: IProductParams): Promise<IDbProduct[]> {
     const { title } = data;
 
-    const payload: any = {};
+    const payload: IProductSearchFields = {};
 
     if (title) {
       const regex = new RegExp(title, 'i');
       payload.title = { $regex: regex };
     }
 
-    return Product.find(payload);
+    return ProductModel.find(payload);
   }
 
-  async delete(productId: string): Promise<IDbProduct> {
-    const product = await Product.findByIdAndDelete(productId);
+  async show(id: string | Schema.Types.ObjectId): Promise<IDbProduct> {
+    const product = await ProductModel.findById(id);
 
     if (!product) {
       throw new ApiError(404, 'product not found');
@@ -47,10 +53,8 @@ class ProductService {
     return product;
   }
 
-  async update(data: IProduct): Promise<IDbProduct> {
-    const { id, ...payload } = data;
-
-    const product = await Product.findByIdAndUpdate(id, payload);
+  async delete(id: string | Schema.Types.ObjectId): Promise<IDbProduct> {
+    const product = await ProductModel.findByIdAndDelete(id);
 
     if (!product) {
       throw new ApiError(404, 'product not found');

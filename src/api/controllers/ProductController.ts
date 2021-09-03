@@ -17,11 +17,11 @@ class ProductController extends Controller {
     }
   }
 
-  async show(req: Request, res: Response, next: NextFunction) {
+  async update(req: Request, res: Response, next: NextFunction) {
     try {
-      const { id } = await ProductValidator.showOrDelete(req);
+      const { id, ...data } = await ProductValidator.update(req);
 
-      const product = await ProductService.show(id);
+      const product = await ProductService.update(id, data);
 
       super.response(res, product);
     } catch (err) {
@@ -41,11 +41,11 @@ class ProductController extends Controller {
     }
   }
 
-  async delete(req: Request, res: Response, next: NextFunction) {
+  async show(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = await ProductValidator.showOrDelete(req);
 
-      const product = await ProductService.delete(id);
+      const product = await ProductService.show(id);
 
       super.response(res, product);
     } catch (err) {
@@ -53,11 +53,11 @@ class ProductController extends Controller {
     }
   }
 
-  async update(req: Request, res: Response, next: NextFunction) {
+  async delete(req: Request, res: Response, next: NextFunction) {
     try {
-      const data = await ProductValidator.update(req);
+      const { id } = await ProductValidator.showOrDelete(req);
 
-      const product = await ProductService.update(data);
+      const product = await ProductService.delete(id);
 
       super.response(res, product);
     } catch (err) {
