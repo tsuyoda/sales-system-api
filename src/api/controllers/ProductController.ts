@@ -3,6 +3,7 @@ import { NextFunction, Request, Response } from 'express';
 import Controller from './Controller';
 import ProductService from '../../core/services/ProductService';
 import ProductValidator from '../validators/ProductValidator';
+import SharedValidator from '../validators/SharedValidator';
 
 class ProductController extends Controller {
   async create(req: Request, res: Response, next: NextFunction) {
@@ -43,7 +44,7 @@ class ProductController extends Controller {
 
   async show(req: Request, res: Response, next: NextFunction) {
     try {
-      const { id } = await ProductValidator.showOrDelete(req);
+      const { id } = await SharedValidator.paramId(req);
 
       const product = await ProductService.show(id);
 
@@ -55,7 +56,7 @@ class ProductController extends Controller {
 
   async delete(req: Request, res: Response, next: NextFunction) {
     try {
-      const { id } = await ProductValidator.showOrDelete(req);
+      const { id } = await SharedValidator.paramId(req);
 
       const product = await ProductService.delete(id);
 

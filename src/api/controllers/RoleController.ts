@@ -3,6 +3,7 @@ import { NextFunction, Request, Response } from 'express';
 import Controller from './Controller';
 import RoleService from '../../core/services/RoleService';
 import RoleValidator from '../validators/RoleValidator';
+import SharedValidator from '../validators/SharedValidator';
 
 class RoleController extends Controller {
   async create(req: Request, res: Response, next: NextFunction) {
@@ -43,7 +44,7 @@ class RoleController extends Controller {
 
   async show(req: Request, res: Response, next: NextFunction) {
     try {
-      const { id } = await RoleValidator.showOrDelete(req);
+      const { id } = await SharedValidator.paramId(req);
 
       const role = await RoleService.show(id);
 
@@ -55,7 +56,7 @@ class RoleController extends Controller {
 
   async delete(req: Request, res: Response, next: NextFunction) {
     try {
-      const { id } = await RoleValidator.showOrDelete(req);
+      const { id } = await SharedValidator.paramId(req);
 
       const role = await RoleService.delete(id);
 
