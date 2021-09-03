@@ -6,59 +6,13 @@ import { Schema } from 'mongoose';
 
 class UserService {
   async create(data: IUserData): Promise<IDbUser> {
-    const { name, email, role, password } = data;
-
-    const regex = new RegExp(
-      /^.*(?=.{8,})((?=.*[!@#$%^&*()\-_=+{};:,<.>]){1})(?=.*\d)((?=.*[a-z]){1})((?=.*[A-Z]){1}).*$/
-    );
-
-    if (!regex.test(password)) {
-      throw new ApiError(
-        400,
-        'Password must contain at least 8 characters, one uppercase, one number and one special case character'
-      );
-    }
-
-    if (await UserModel.findOne({ name })) {
-      throw new ApiError(400, 'name already in use');
-    }
-
-    if (await UserModel.findOne({ email })) {
-      throw new ApiError(400, 'email already in use');
-    }
-
-    if (!(await RoleModel.findById(role))) {
-      throw new ApiError(400, 'role does not exist');
-    }
+    await this.userDataValidation(data);
 
     return UserModel.create(data);
   }
 
   async update(id: string | Schema.Types.ObjectId, data: IUserData): Promise<IDbUser> {
-    const { name, email, role, password } = data;
-
-    const regex = new RegExp(
-      /^.*(?=.{8,})((?=.*[!@#$%^&*()\-_=+{};:,<.>]){1})(?=.*\d)((?=.*[a-z]){1})((?=.*[A-Z]){1}).*$/
-    );
-
-    if (!regex.test(password)) {
-      throw new ApiError(
-        400,
-        'Password must contain at least 8 characters, one uppercase, one number and one special case character'
-      );
-    }
-
-    if (await UserModel.findOne({ name })) {
-      throw new ApiError(400, 'name already in use');
-    }
-
-    if (await UserModel.findOne({ email })) {
-      throw new ApiError(400, 'email already in use');
-    }
-
-    if (!(await RoleModel.findById(role))) {
-      throw new ApiError(400, 'role does not exist');
-    }
+    await this.userDataValidation(data);
 
     const user = await UserModel.findByIdAndUpdate(id, data);
 
@@ -103,6 +57,33 @@ class UserService {
     }
 
     return user;
+  }
+
+  private async userDataValidation(data: IUserData): Promise<void> {
+    const { name, email, role, password } = data;
+
+    const regex = new RegExp(
+      /^.*(?=.{8,})((?=.*[!@#$%^&*()\-_=+{};:,<.>]){1})(?=.*\d)((?=.*[a-z]){1})((?=.*[A-Z]){1}).*$/
+    );
+
+    if (!regex.test(password)) {
+      throw new ApiError(
+        400,
+        'Password must contain at least 8 characters, one uppercase, one number and one special case character'
+      );
+    }
+
+    if (await UserModel.findOne({ name })) {
+      throw new ApiError(400, 'name already in use');
+    }
+
+    if (await UserModel.findOne({ email })) {
+      throw new ApiError(400, 'email already in use');
+    }
+
+    if (!(await RoleModel.findById(role))) {
+      throw new ApiError(400, 'role does not exist');
+    }
   }
 }
 
