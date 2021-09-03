@@ -1,60 +1,76 @@
-import * as Yup from 'yup';
+import Joi from 'joi';
 
 import ApiError from '../../core/exceptions/ApiError';
 import { Request } from 'express';
 
 class ProductValidator {
-  async create(req: Request) {
-    const schema = Yup.object({
-      title: Yup.string().typeError('title is invalid').required('title is required'),
-      description: Yup.string()
-        .typeError('description is invalid')
-        .required('description is required'),
-      value: Yup.number().typeError('value is invalid').required('value is required'),
-      amount: Yup.number()
-        .integer('amount is invalid')
-        .typeError('amount is invalid')
-        .required('amount is required'),
+  create(req: Request) {
+    const schema = Joi.object({
+      title: Joi.string().required(),
+      description: Joi.string().required(),
+      value: Joi.number().required(),
+      amount: Joi.number().integer().required(),
     });
 
-    return schema.validate(req.body).catch(err => {
-      throw new ApiError(400, err.message);
-    });
+    const { value, error } = schema.validate(req.body);
+
+    if (error) {
+      throw new ApiError(400, error.details[0].message);
+    }
+
+    return value;
   }
 
-  async update(req: Request) {
-    const schema = Yup.object({
-      id: Yup.string().typeError('id is invalid').required('id is required'),
-      title: Yup.string().typeError('title is invalid').required('title is required'),
-      description: Yup.string()
-        .typeError('description is invalid')
-        .required('description is required'),
-      value: Yup.number().typeError('value is invalid').required('value is required'),
-      amount: Yup.number()
-        .integer('amount is invalid')
-        .typeError('amount is invalid')
-        .required('amount is required'),
+  update(req: Request) {
+    const schema = Joi.object({
+      id: Joi.string()
+        .regex(/^[0-9a-fA-F]{24}$/)
+        .message('"id" must be a ObjectId')
+        .required(),
+      title: Joi.string().required(),
+      description: Joi.string().required(),
+      value: Joi.number().required(),
+      amount: Joi.number().integer().required(),
     });
 
-    return schema.validate({ ...req.body, ...req.params }).catch(err => {
-      throw new ApiError(400, err.message);
-    });
+    const { value, error } = schema.validate({ ...req.params, ...req.body });
+
+    if (error) {
+      throw new ApiError(400, error.details[0].message);
+    }
+
+    return value;
   }
 
-  async list(req: Request) {
-    const schema = Yup.object({
-      title: Yup.string().typeError('title is invalid').optional(),
+  list(req: Request) {
+    const schema = Joi.object({
+      title: Joi.string().optional(),
     });
 
-    return schema.validate(req.query);
+    const { value, error } = schema.validate(req.query);
+
+    if (error) {
+      throw new ApiError(400, error.details[0].message);
+    }
+
+    return value;
   }
 
-  async showOrDelete(req: Request) {
-    const schema = Yup.object({
-      id: Yup.string().typeError('id is invalid').required('id is required'),
+  showOrDelete(req: Request) {
+    const schema = Joi.object({
+      id: Joi.string()
+        .regex(/^[0-9a-fA-F]{24}$/)
+        .message('"id" must be a ObjectId')
+        .required(),
     });
 
-    return schema.validate(req.params);
+    const { value, error } = schema.validate(req.params);
+
+    if (error) {
+      throw new ApiError(400, error.details[0].message);
+    }
+
+    return value;
   }
 }
 
