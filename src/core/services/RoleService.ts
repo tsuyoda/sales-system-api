@@ -15,6 +15,12 @@ class RoleService {
   }
 
   async update(id: string | Schema.Types.ObjectId, data: IRoleData): Promise<IDbRole> {
+    const { name } = data;
+
+    if (await RoleModel.findOne({ name })) {
+      throw new ApiError(400, 'name already in use');
+    }
+
     const role = await RoleModel.findByIdAndUpdate(id, data);
 
     if (!role) {
