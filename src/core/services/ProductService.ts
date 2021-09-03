@@ -21,6 +21,12 @@ class ProductService {
   }
 
   async update(id: string | Schema.Types.ObjectId, data: IProductData): Promise<IDbProduct> {
+    const { title } = data;
+
+    if (await ProductModel.findOne({ title })) {
+      throw new ApiError(400, 'title already in use');
+    }
+
     const product = await ProductModel.findByIdAndUpdate(id, data);
 
     if (!product) {
