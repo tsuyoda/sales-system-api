@@ -19,7 +19,7 @@ class ProductController extends Controller {
 
   async show(req: Request, res: Response, next: NextFunction) {
     try {
-      const { id } = await ProductValidator.show(req);
+      const { id } = await ProductValidator.showOrDelete(req);
 
       const product = await ProductService.show(id);
 
@@ -43,7 +43,7 @@ class ProductController extends Controller {
 
   async delete(req: Request, res: Response, next: NextFunction) {
     try {
-      const { id } = await ProductValidator.delete(req);
+      const { id } = await ProductValidator.showOrDelete(req);
 
       const product = await ProductService.delete(id);
 

@@ -22,30 +22,6 @@ class ProductValidator {
     });
   }
 
-  async show(req: Request) {
-    const schema = Yup.object({
-      id: Yup.string().typeError('id is invalid').required('id is required'),
-    });
-
-    return schema.validate(req.params);
-  }
-
-  async list(req: Request) {
-    const schema = Yup.object({
-      title: Yup.string().typeError('title is invalid').optional(),
-    });
-
-    return schema.validate(req.query);
-  }
-
-  async delete(req: Request) {
-    const schema = Yup.object({
-      id: Yup.string().typeError('id is invalid').required('id is required'),
-    });
-
-    return schema.validate(req.params);
-  }
-
   async update(req: Request) {
     const schema = Yup.object({
       id: Yup.string().typeError('id is invalid').required('id is required'),
@@ -63,6 +39,22 @@ class ProductValidator {
     return schema.validate({ ...req.body, ...req.params }).catch(err => {
       throw new ApiError(400, err.message);
     });
+  }
+
+  async list(req: Request) {
+    const schema = Yup.object({
+      title: Yup.string().typeError('title is invalid').optional(),
+    });
+
+    return schema.validate(req.query);
+  }
+
+  async showOrDelete(req: Request) {
+    const schema = Yup.object({
+      id: Yup.string().typeError('id is invalid').required('id is required'),
+    });
+
+    return schema.validate(req.params);
   }
 }
 

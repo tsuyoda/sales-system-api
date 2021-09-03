@@ -1,3 +1,4 @@
+import { IDbProduct } from '../interfaces/IProduct';
 import mongoose from '../support/database/mongo';
 
 const ProductSchema = new mongoose.Schema({
@@ -23,6 +24,6 @@ const ProductSchema = new mongoose.Schema({
   },
 });
 
-const Product = mongoose.model('Product', ProductSchema);
+const ProductModel = mongoose.model<IDbProduct>('Product', ProductSchema);
 
-export default Product;
+export default ProductModel;
