@@ -17,7 +17,8 @@
     "skipLibCheck": true,
     "alwaysStrict": true,
     "strict": true,
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "typeRoots": ["./src/types", "./node_modules/@types"]
   },
   "compileOnSave": false,
   "include": ["src/**/*.ts"],

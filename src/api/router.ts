@@ -5,12 +5,15 @@ import ApiError from '../core/exceptions/ApiError';
 import roleRoutes from './routes/roleRoutes';
 import userRoutes from './routes/userRoutes';
 import authRoutes from './routes/authRoutes';
+import auth from './middlewares/auth';
 
 const router = express.Router();
 
 router.get('/', IndexController.index);
 
 router.use('/auth', authRoutes);
+
+router.use(auth);
 
 router.use('/product', productRoutes);
 router.use('/role', roleRoutes);
