@@ -1,18 +1,18 @@
 import { NextFunction, Request, Response } from 'express';
 
 import Controller from './Controller';
-import ProductService from '../../core/services/ProductService';
-import ProductValidator from '../validators/ProductValidator';
+import UserService from '../../core/services/UserService';
+import UserValidator from '../validators/UserValidator';
 import SharedValidator from '../validators/SharedValidator';
 
-class ProductController extends Controller {
+class UserController extends Controller {
   async create(req: Request, res: Response, next: NextFunction) {
     try {
-      const data = await ProductValidator.create(req);
+      const data = await UserValidator.create(req);
 
-      const product = await ProductService.create(data);
+      const user = await UserService.create(data);
 
-      super.response(res, product);
+      super.response(res, user);
     } catch (err) {
       next(err);
     }
@@ -20,11 +20,11 @@ class ProductController extends Controller {
 
   async update(req: Request, res: Response, next: NextFunction) {
     try {
-      const { id, ...data } = await ProductValidator.update(req);
+      const { id, ...data } = await UserValidator.update(req);
 
-      const product = await ProductService.update(id, data);
+      const user = await UserService.update(id, data);
 
-      super.response(res, product);
+      super.response(res, user);
     } catch (err) {
       next(err);
     }
@@ -32,11 +32,11 @@ class ProductController extends Controller {
 
   async list(req: Request, res: Response, next: NextFunction) {
     try {
-      const data = await ProductValidator.list(req);
+      const data = await UserValidator.list(req);
 
-      const products = await ProductService.list(data);
+      const users = await UserService.list(data);
 
-      super.response(res, products);
+      super.response(res, users);
     } catch (err) {
       next(err);
     }
@@ -46,9 +46,9 @@ class ProductController extends Controller {
     try {
       const { id } = await SharedValidator.paramId(req);
 
-      const product = await ProductService.show(id);
+      const user = await UserService.show(id);
 
-      super.response(res, product);
+      super.response(res, user);
     } catch (err) {
       next(err);
     }
@@ -58,13 +58,13 @@ class ProductController extends Controller {
     try {
       const { id } = await SharedValidator.paramId(req);
 
-      const product = await ProductService.delete(id);
+      const user = await UserService.delete(id);
 
-      super.response(res, product);
+      super.response(res, user);
     } catch (err) {
       next(err);
     }
   }
 }
 
-export default new ProductController();
+export default new UserController();

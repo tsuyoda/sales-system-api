@@ -3,13 +3,11 @@ import * as Yup from 'yup';
 import ApiError from '../../core/exceptions/ApiError';
 import { Request } from 'express';
 
-class ProductValidator {
+class RoleValidator {
   async create(req: Request) {
     const schema = Yup.object({
-      title: Yup.string().required(),
-      description: Yup.string().required(),
-      value: Yup.number().required(),
-      amount: Yup.number().integer().required(),
+      name: Yup.string().required(),
+      description: Yup.string().optional(),
     });
 
     return schema.validate(req.body).catch(err => {
@@ -22,20 +20,18 @@ class ProductValidator {
       id: Yup.string()
         .matches(/^[0-9a-fA-F]{24}$/, 'id must be a ObjectId')
         .required(),
-      title: Yup.string().required(),
-      description: Yup.string().required(),
-      value: Yup.number().required(),
-      amount: Yup.number().integer().required(),
+      name: Yup.string().required(),
+      description: Yup.string().optional(),
     });
 
-    return schema.validate({ ...req.body, ...req.params }).catch(err => {
+    return schema.validate({ ...req.params, ...req.body }).catch(err => {
       throw new ApiError(400, err.message);
     });
   }
 
   async list(req: Request) {
     const schema = Yup.object({
-      title: Yup.string().optional(),
+      name: Yup.string().optional(),
     });
 
     return schema.validate(req.query).catch(err => {
@@ -44,4 +40,4 @@ class ProductValidator {
   }
 }
 
-export default new ProductValidator();
+export default new RoleValidator();
