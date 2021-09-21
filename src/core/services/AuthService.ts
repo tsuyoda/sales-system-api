@@ -1,5 +1,5 @@
 import ApiError from '../exceptions/ApiError';
-import User from '../models/userModel';
+import User from '../models/UserModel';
 import bcrypt from 'bcrypt';
 import Jwt from 'jsonwebtoken';
 import { JWT_SECRET } from '../../config/auth';

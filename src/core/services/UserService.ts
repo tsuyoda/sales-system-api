@@ -1,7 +1,7 @@
 import ApiError from '../exceptions/ApiError';
 import { IDbUser, IUserData, IUserParams, IUserSearchFields } from '../interfaces/IUser';
 import UserModel from '../models/UserModel';
-import RoleModel from '../models/roleModel';
+import RoleModel from '../models/RoleModel';
 import { Schema } from 'mongoose';
 
 class UserService {
