@@ -4,10 +4,13 @@ import express from 'express';
 import ApiError from '../core/exceptions/ApiError';
 import roleRoutes from './routes/roleRoutes';
 import userRoutes from './routes/userRoutes';
+import authRoutes from './routes/authRoutes';
 
 const router = express.Router();
 
 router.get('/', IndexController.index);
+
+router.use('/auth', authRoutes);
 
 router.use('/product', productRoutes);
 router.use('/role', roleRoutes);
