@@ -7,8 +7,7 @@ module.exports = {
   bracketSpacing: true,
   jsxBracketSameLine: false,
   arrowParens: 'avoid',
-  endOfLine: 'lf',
   printWidth: 100,
   semi: true,
-  eslintIntegration: true
+  eslintIntegration: true,
 };
