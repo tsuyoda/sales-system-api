@@ -7,6 +7,8 @@ export interface IRoleData {
 
 export interface IRoleParams {
   name?: string;
+  page?: number;
+  limit?: number;
 }
 
 export interface IRoleSearchFields {
