@@ -34,9 +34,9 @@ class ProductController extends Controller {
     try {
       const data = await ProductValidator.list(req);
 
-      const products = await ProductService.list(data);
+      const { docs, ...paginator } = await ProductService.list(data);
 
-      super.response(res, products);
+      super.response(res, docs, 200, paginator);
     } catch (err) {
       next(err);
     }

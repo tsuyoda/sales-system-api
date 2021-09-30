@@ -8,6 +8,7 @@ import {
 import ApiError from '../exceptions/ApiError';
 import ProductModel from '../models/productModel';
 import { Schema } from 'mongoose';
+import { PaginationModel } from 'mongoose-paginate-ts';
 
 class ProductService {
   async create(data: IProductData): Promise<IDbProduct> {
@@ -36,8 +37,8 @@ class ProductService {
     return product;
   }
 
-  async list(data: IProductParams): Promise<IDbProduct[]> {
-    const { title } = data;
+  async list(data: IProductParams): Promise<PaginationModel<IDbProduct>> {
+    const { title, page, limit } = data;
 
     const payload: IProductSearchFields = {};
 
@@ -46,7 +47,19 @@ class ProductService {
       payload.title = { $regex: regex };
     }
 
-    return ProductModel.find(payload);
+    const options = {
+      query: payload,
+      page,
+      limit,
+    };
+
+    const results = await ProductModel.paginate(options);
+
+    if (!results) {
+      return {} as PaginationModel<IDbProduct>;
+    }
+
+    return results;
   }
 
   async show(id: string | Schema.Types.ObjectId): Promise<IDbProduct> {

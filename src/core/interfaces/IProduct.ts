@@ -9,6 +9,8 @@ export interface IProductData {
 
 export interface IProductParams {
   title?: string;
+  page?: number;
+  limit?: number;
 }
 
 export interface IProductSearchFields {
