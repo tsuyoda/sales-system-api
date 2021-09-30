@@ -9,6 +9,7 @@ export interface IRoleParams {
   name?: string;
   page?: number;
   limit?: number;
+  sort?: string;
 }
 
 export interface IRoleSearchFields {

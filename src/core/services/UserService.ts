@@ -26,7 +26,7 @@ class UserService {
   }
 
   async list(data: IUserParams): Promise<PaginationModel<IDbUser>> {
-    const { name, fullName, page, limit, ...rest } = data;
+    const { name, fullName, page, limit, sort, ...rest } = data;
 
     const payload: IUserSearchFields = { ...rest };
 
@@ -40,6 +40,7 @@ class UserService {
 
     const options = {
       query: payload,
+      sort: { createdAt: sort },
       page,
       limit,
     };

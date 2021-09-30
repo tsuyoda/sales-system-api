@@ -16,6 +16,7 @@ export interface IUserParams {
   role?: string | Schema.Types.ObjectId;
   page?: number;
   limit?: number;
+  sort?: string;
 }
 
 export interface IUserSearchFields {

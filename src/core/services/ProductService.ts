@@ -38,7 +38,7 @@ class ProductService {
   }
 
   async list(data: IProductParams): Promise<PaginationModel<IDbProduct>> {
-    const { title, page, limit } = data;
+    const { title, page, limit, sort } = data;
 
     const payload: IProductSearchFields = {};
 
@@ -49,6 +49,7 @@ class ProductService {
 
     const options = {
       query: payload,
+      sort: { createdAt: sort },
       page,
       limit,
     };

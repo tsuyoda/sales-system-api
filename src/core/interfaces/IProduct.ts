@@ -11,6 +11,7 @@ export interface IProductParams {
   title?: string;
   page?: number;
   limit?: number;
+  sort?: string;
 }
 
 export interface IProductSearchFields {

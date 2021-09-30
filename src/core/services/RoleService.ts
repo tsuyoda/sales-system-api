@@ -32,7 +32,7 @@ class RoleService {
   }
 
   async list(data: IRoleParams): Promise<PaginationModel<IDbRole>> {
-    const { name, page, limit } = data;
+    const { name, page, limit, sort } = data;
 
     const payload: IRoleSearchFields = {};
 
@@ -43,6 +43,7 @@ class RoleService {
 
     const options = {
       query: payload,
+      sort: { createdAt: sort },
       page,
       limit,
     };
