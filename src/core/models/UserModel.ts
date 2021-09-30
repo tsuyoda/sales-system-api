@@ -1,6 +1,7 @@
 import mongoose from '../support/database/mongo';
 import bcrypt from 'bcrypt';
 import { IDbUser } from '../interfaces/IUser';
+import { mongoosePagination, Pagination } from 'mongoose-paginate-ts';
 
 const UserSchema = new mongoose.Schema<IDbUser>({
   name: {
@@ -43,6 +44,10 @@ UserSchema.pre('save', async function (next) {
   next();
 });
 
-const UserModel = mongoose.models.User || mongoose.model<IDbUser>('User', UserSchema);
+UserSchema.plugin(mongoosePagination);
+
+const UserModel =
+  (mongoose.models.User as Pagination<IDbUser>) ||
+  mongoose.model<IDbUser, Pagination<IDbUser>>('User', UserSchema);
 
 export default UserModel;

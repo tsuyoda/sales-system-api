@@ -34,9 +34,9 @@ class UserController extends Controller {
     try {
       const data = await UserValidator.list(req);
 
-      const users = await UserService.list(data);
+      const { docs, ...paginator } = await UserService.list(data);
 
-      super.response(res, users);
+      super.response(res, docs, 200, paginator);
     } catch (err) {
       next(err);
     }

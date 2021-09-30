@@ -3,6 +3,8 @@ import { IDbUser, IUserData, IUserParams, IUserSearchFields } from '../interface
 import UserModel from '../models/UserModel';
 import RoleModel from '../models/RoleModel';
 import { Schema } from 'mongoose';
+import { PaginationModel } from 'mongoose-paginate-ts';
+import { REGEX_PASSWORD } from './../constants/regex';
 
 class UserService {
   async create(data: IUserData): Promise<IDbUser> {
@@ -23,8 +25,8 @@ class UserService {
     return user;
   }
 
-  async list(data: IUserParams): Promise<IDbUser[]> {
-    const { name, fullName, ...rest } = data;
+  async list(data: IUserParams): Promise<PaginationModel<IDbUser>> {
+    const { name, fullName, page, limit, ...rest } = data;
 
     const payload: IUserSearchFields = { ...rest };
 
@@ -36,7 +38,19 @@ class UserService {
       payload.fullName = { $regex: new RegExp(fullName, 'i') };
     }
 
-    return UserModel.find(payload);
+    const options = {
+      query: payload,
+      page,
+      limit,
+    };
+
+    const results = await UserModel.paginate(options);
+
+    if (!results) {
+      return {} as PaginationModel<IDbUser>;
+    }
+
+    return results;
   }
 
   async show(id: string | Schema.Types.ObjectId): Promise<IDbUser> {
@@ -62,9 +76,7 @@ class UserService {
   private async userDataValidation(data: IUserData): Promise<void> {
     const { name, email, role, password } = data;
 
-    const regex = new RegExp(
-      /^.*(?=.{8,})((?=.*[!@#$%^&*()\-_=+{};:,<.>]){1})(?=.*\d)((?=.*[a-z]){1})((?=.*[A-Z]){1}).*$/
-    );
+    const regex = new RegExp(REGEX_PASSWORD);
 
     if (!regex.test(password)) {
       throw new ApiError(

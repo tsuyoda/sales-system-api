@@ -47,6 +47,8 @@ class UserValidator {
       role: Yup.string()
         .matches(/^[0-9a-fA-F]{24}$/, 'role must be a ObjectId')
         .optional(),
+      page: Yup.number().integer().default(1),
+      limit: Yup.number().integer().default(10),
     });
 
     return schema.validate(req.query).catch(err => {
