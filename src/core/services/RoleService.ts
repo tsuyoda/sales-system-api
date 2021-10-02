@@ -1,4 +1,5 @@
 import { Schema } from 'mongoose';
+import { PaginationModel } from 'mongoose-paginate-ts';
 import ApiError from '../exceptions/ApiError';
 import { IDbRole, IRoleData, IRoleParams, IRoleSearchFields } from '../interfaces/IRole';
 import RoleModel from '../models/RoleModel';
@@ -30,8 +31,8 @@ class RoleService {
     return role;
   }
 
-  async list(data: IRoleParams): Promise<IDbRole[]> {
-    const { name } = data;
+  async list(data: IRoleParams): Promise<PaginationModel<IDbRole>> {
+    const { name, page, limit, sort } = data;
 
     const payload: IRoleSearchFields = {};
 
@@ -40,7 +41,20 @@ class RoleService {
       payload.name = { $regex: regex };
     }
 
-    return RoleModel.find(data);
+    const options = {
+      query: payload,
+      sort: { createdAt: sort },
+      page,
+      limit,
+    };
+
+    const results = await RoleModel.paginate(options);
+
+    if (!results) {
+      return {} as PaginationModel<IDbRole>;
+    }
+
+    return results;
   }
 
   async show(id: string | Schema.Types.ObjectId): Promise<IDbRole> {

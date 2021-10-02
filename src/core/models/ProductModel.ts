@@ -1,5 +1,6 @@
 import { IDbProduct } from '../interfaces/IProduct';
 import mongoose from '../support/database/mongo';
+import { mongoosePagination, Pagination } from 'mongoose-paginate-ts';
 
 const ProductSchema = new mongoose.Schema({
   title: {
@@ -24,7 +25,10 @@ const ProductSchema = new mongoose.Schema({
   },
 });
 
+ProductSchema.plugin(mongoosePagination);
+
 const ProductModel =
-  mongoose.models.Product || mongoose.model<IDbProduct>('Product', ProductSchema);
+  (mongoose.models.Product as Pagination<IDbProduct>) ||
+  mongoose.model<IDbProduct, Pagination<IDbProduct>>('Product', ProductSchema);
 
 export default ProductModel;
