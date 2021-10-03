@@ -36,6 +36,9 @@ class ProductValidator {
   async list(req: Request) {
     const schema = Yup.object({
       title: Yup.string().optional(),
+      page: Yup.number().integer().default(1),
+      limit: Yup.number().integer().default(10),
+      sort: Yup.string().oneOf(['asc', 'desc']).default('desc'),
     });
 
     return schema.validate(req.query).catch(err => {

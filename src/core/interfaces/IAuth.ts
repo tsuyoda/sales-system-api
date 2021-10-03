@@ -10,7 +10,7 @@ export interface IAuth {
   role: {
     id: string;
     name: string;
-    description: string;
+    description?: string;
   };
 }
 

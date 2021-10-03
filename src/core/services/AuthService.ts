@@ -4,6 +4,7 @@ import bcrypt from 'bcrypt';
 import Jwt from 'jsonwebtoken';
 import { JWT_SECRET } from '../../config/auth';
 import { IAuthData, IAuth } from '../interfaces/IAuth';
+import { IDbRole } from '../interfaces/IRole';
 
 class AuthService {
   async authenticate(data: IAuthData): Promise<IAuth> {
@@ -26,6 +27,8 @@ class AuthService {
 
     validityDate.setSeconds(currentDate.getSeconds() + 1800);
 
+    const roleData = user.role as IDbRole;
+
     return {
       token,
       expiresAt: validityDate,
@@ -36,9 +39,9 @@ class AuthService {
         email: user.email,
       },
       role: {
-        id: user.role._id,
-        name: user.role.name,
-        description: user.role.description,
+        id: roleData._id,
+        name: roleData.name,
+        description: roleData.description,
       },
     };
   }

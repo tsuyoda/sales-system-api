@@ -34,9 +34,9 @@ class RoleController extends Controller {
     try {
       const data = await RoleValidator.list(req);
 
-      const roles = await RoleService.list(data);
+      const { docs, ...paginator } = await RoleService.list(data);
 
-      super.response(res, roles);
+      super.response(res, docs, 200, paginator);
     } catch (err) {
       next(err);
     }

@@ -1,5 +1,6 @@
 import { IDbRole } from '../interfaces/IRole';
 import mongoose from '../support/database/mongo';
+import { mongoosePagination, Pagination } from 'mongoose-paginate-ts';
 
 const RoleSchema = new mongoose.Schema({
   name: {
@@ -17,6 +18,10 @@ const RoleSchema = new mongoose.Schema({
   },
 });
 
-const RoleModel = mongoose.models.Role || mongoose.model<IDbRole>('Role', RoleSchema);
+RoleSchema.plugin(mongoosePagination);
+
+const RoleModel =
+  (mongoose.models.Role as Pagination<IDbRole>) ||
+  mongoose.model<IDbRole, Pagination<IDbRole>>('Role', RoleSchema);
 
 export default RoleModel;

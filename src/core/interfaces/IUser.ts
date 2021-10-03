@@ -1,4 +1,5 @@
 import { Document, Schema } from 'mongoose';
+import { IDbRole } from './IRole';
 
 export interface IUserData {
   name: string;
@@ -13,6 +14,9 @@ export interface IUserParams {
   fullName?: string;
   email?: string;
   role?: string | Schema.Types.ObjectId;
+  page?: number;
+  limit?: number;
+  sort?: string;
 }
 
 export interface IUserSearchFields {
@@ -31,6 +35,6 @@ export interface IDbUser extends Document {
   fullName: string;
   email: string;
   password: string;
-  role: string | Schema.Types.ObjectId;
+  role: string | Schema.Types.ObjectId | IDbRole;
   createdAt: Date;
 }
