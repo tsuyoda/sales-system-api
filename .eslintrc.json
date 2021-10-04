@@ -12,7 +12,12 @@
   "rules": {
     "eqeqeq": "off",
     "no-restricted-globals": "error",
-    "linebreak-style": ["error", "unix"],
+    "prettier/prettier": [
+      "error",
+      {
+        "endOfLine": "auto"
+      }
+    ],
     "max-lines": ["error", 300],
     "max-len": [
       "warn",
