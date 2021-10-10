@@ -30,14 +30,18 @@ class RoleValidator {
   }
 
   async list(req: Request) {
+    const nameIsArray = Array.isArray(req.query.name);
+
     const schema = Yup.object({
-      name: Yup.string().optional(),
+      name: Yup.lazy(val =>
+        Array.isArray(val) ? Yup.array().of(Yup.string()).optional() : Yup.string().optional()
+      ),
       page: Yup.number().integer().default(1),
       limit: Yup.number().integer().default(10),
       sort: Yup.string().oneOf(['asc', 'desc']).default('desc'),
     });
 
-    return schema.validate(req.query).catch(err => {
+    return schema.validate({ ...req.query, nameIsArray }).catch(err => {
       throw new ApiError(400, err.message);
     });
   }

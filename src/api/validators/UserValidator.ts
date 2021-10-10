@@ -44,9 +44,11 @@ class UserValidator {
       name: Yup.string().optional(),
       fullName: Yup.string().optional(),
       email: Yup.string().email().optional(),
-      role: Yup.string()
-        .matches(/^[0-9a-fA-F]{24}$/, 'role must be a ObjectId')
-        .optional(),
+      role: Yup.object({
+        name: Yup.lazy(val =>
+          Array.isArray(val) ? Yup.array().of(Yup.string()).optional() : Yup.string().optional()
+        ),
+      }).optional(),
       page: Yup.number().integer().default(1),
       limit: Yup.number().integer().default(10),
       sort: Yup.string().oneOf(['asc', 'desc']).default('desc'),

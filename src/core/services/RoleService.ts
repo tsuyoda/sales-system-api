@@ -37,8 +37,10 @@ class RoleService {
     const payload: IRoleSearchFields = {};
 
     if (name) {
-      const regex = new RegExp(name, 'i');
-      payload.name = { $regex: regex };
+      const names = Array.isArray(name) ? name : [name];
+      const namesRegex = names.map(name => new RegExp(name, 'i'));
+
+      payload.name = { $in: namesRegex };
     }
 
     const options = {

@@ -26,7 +26,7 @@ class UserService {
   }
 
   async list(data: IUserParams): Promise<PaginationModel<IDbUser>> {
-    const { name, fullName, page, limit, sort, ...rest } = data;
+    const { name, fullName, role, page, limit, sort, ...rest } = data;
 
     const payload: IUserSearchFields = { ...rest };
 
@@ -38,9 +38,18 @@ class UserService {
       payload.fullName = { $regex: new RegExp(fullName, 'i') };
     }
 
+    if (role && role.name) {
+      const names = Array.isArray(role.name) ? role.name : [role.name];
+
+      const roles = await RoleModel.find({ name: { $in: names } });
+
+      payload.role = { $in: roles.map(role => role._id) };
+    }
+
     const options = {
       query: payload,
       sort: { createdAt: sort },
+      populate: 'role',
       page,
       limit,
     };
@@ -55,7 +64,7 @@ class UserService {
   }
 
   async show(id: string | Schema.Types.ObjectId): Promise<IDbUser> {
-    const user = await UserModel.findById(id);
+    const user = await UserModel.findById(id).populate('role');
 
     if (!user) {
       throw new ApiError(404, 'user not found');

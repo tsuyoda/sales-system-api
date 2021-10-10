@@ -6,7 +6,7 @@ export interface IRoleData {
 }
 
 export interface IRoleParams {
-  name?: string;
+  name?: string | string[];
   page?: number;
   limit?: number;
   sort?: string;
@@ -14,7 +14,7 @@ export interface IRoleParams {
 
 export interface IRoleSearchFields {
   name?: {
-    $regex: RegExp;
+    $in: RegExp[];
   };
 }
 

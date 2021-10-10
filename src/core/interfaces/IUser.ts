@@ -1,4 +1,5 @@
 import { Document, Schema } from 'mongoose';
+import mongoose from '../support/database/mongo';
 import { IDbRole } from './IRole';
 
 export interface IUserData {
@@ -13,7 +14,9 @@ export interface IUserParams {
   name?: string;
   fullName?: string;
   email?: string;
-  role?: string | Schema.Types.ObjectId;
+  role?: {
+    name?: string | string[];
+  };
   page?: number;
   limit?: number;
   sort?: string;
@@ -27,7 +30,7 @@ export interface IUserSearchFields {
     $regex: RegExp;
   };
   email?: string;
-  role?: string | Schema.Types.ObjectId;
+  role?: { $in: mongoose.Types.ObjectId[] };
 }
 
 export interface IDbUser extends Document {
