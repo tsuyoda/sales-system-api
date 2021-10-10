@@ -16,5 +16,5 @@ db.users.findOne({ name: 'admin' }) ||
     fullName: 'Administrator',
     email: 'admin@admin.com',
     password: '$2b$10$LDgghD.HhTxU3pNEqTpHFuUvhKFQv3hc0WtbXmqs5mU8wkpZhBNgG',
-    role: role.insertedId.valueOf(),
+    role: role.insertedId,
   });
