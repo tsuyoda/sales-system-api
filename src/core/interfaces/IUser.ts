@@ -1,10 +1,10 @@
 import { Document, Schema } from 'mongoose';
 import mongoose from '../support/database/mongo';
+import { IPerson } from './IPerson';
 import { IDbRole } from './IRole';
 
-export interface IUserData {
-  name: string;
-  fullName: string;
+export interface IUserData extends IPerson {
+  username: string;
   email: string;
   password: string;
   role: string | Schema.Types.ObjectId;
@@ -33,9 +33,8 @@ export interface IUserSearchFields {
   role?: { $in: mongoose.Types.ObjectId[] };
 }
 
-export interface IDbUser extends Document {
-  name: string;
-  fullName: string;
+export interface IDbUser extends Document, IPerson {
+  username: string;
   email: string;
   password: string;
   role: string | Schema.Types.ObjectId | IDbRole;

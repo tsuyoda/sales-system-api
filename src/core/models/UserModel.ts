@@ -2,16 +2,14 @@ import mongoose from '../support/database/mongo';
 import bcrypt from 'bcrypt';
 import { IDbUser } from '../interfaces/IUser';
 import { mongoosePagination, Pagination } from 'mongoose-paginate-ts';
+import PersonSchema from './sharedSchemas/PersonSchema';
 
 const UserSchema = new mongoose.Schema<IDbUser>({
-  name: {
+  ...PersonSchema.obj,
+  username: {
     type: String,
     unique: true,
     lowercase: true,
-    required: true,
-  },
-  fullName: {
-    type: String,
     required: true,
   },
   email: {

@@ -2,7 +2,7 @@ import { IDbRole } from '../interfaces/IRole';
 import mongoose from '../support/database/mongo';
 import { mongoosePagination, Pagination } from 'mongoose-paginate-ts';
 
-const RoleSchema = new mongoose.Schema({
+const RoleSchema = new mongoose.Schema<IDbRole>({
   name: {
     type: String,
     unique: true,
@@ -10,6 +10,17 @@ const RoleSchema = new mongoose.Schema({
   },
   description: {
     type: String,
+    required: false,
+  },
+  permissions: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Permission',
+      required: false,
+    },
+  ],
+  isAdmin: {
+    type: Boolean,
     required: false,
   },
   createdAt: {

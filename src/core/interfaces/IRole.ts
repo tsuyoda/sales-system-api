@@ -1,8 +1,10 @@
-import { Document } from 'mongoose';
+import { Document, Schema } from 'mongoose';
+import { IDbPermission } from './IPermission';
 
 export interface IRoleData {
   name: string;
   description?: string;
+  isAdmin?: boolean;
 }
 
 export interface IRoleParams {
@@ -21,5 +23,7 @@ export interface IRoleSearchFields {
 export interface IDbRole extends Document {
   name: string;
   description?: string;
+  permissions: string[] | Schema.Types.ObjectId[] | IDbPermission[];
+  isAdmin?: boolean;
   createdAt: Date;
 }

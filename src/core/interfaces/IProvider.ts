@@ -1,4 +1,5 @@
 import { Document } from 'mongoose';
+import { IPerson } from './IPerson';
 
 export interface IProviderData {
   name: string;
@@ -18,8 +19,6 @@ export interface IProviderSearchFields {
   };
 }
 
-export interface IDbProvider extends Document {
-  name: string;
-  type: string;
+export interface IDbProvider extends Document, IPerson {
   createdAt: Date;
 }
