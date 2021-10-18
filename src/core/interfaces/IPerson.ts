@@ -1,8 +1,8 @@
 export interface IPerson {
-  name: string;
+  fullName: string;
   doc: {
     id: string;
-    type: 'F' | 'J';
+    type: string;
   };
   contact: {
     email: string;
@@ -15,7 +15,6 @@ export interface IPerson {
     complement?: string;
     city: string;
     state: string;
-    country: string;
     postalCode: string;
   };
 }
