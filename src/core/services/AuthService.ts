@@ -20,7 +20,7 @@ class AuthService {
       throw new ApiError(401, 'wrong password');
     }
 
-    const token = Jwt.sign({ id: user._id, name: username }, JWT_SECRET, { expiresIn: 1800 });
+    const token = Jwt.sign({ id: user._id, name: username }, JWT_SECRET, { expiresIn: 7200 });
 
     const currentDate = new Date();
     const validityDate = new Date();
