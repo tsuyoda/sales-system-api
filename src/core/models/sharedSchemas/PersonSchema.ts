@@ -1,5 +1,3 @@
-import mongoose from '../../support/database/mongo';
-
 const DocDocumentSchema = {
   id: {
     type: String,
@@ -45,10 +43,6 @@ const AddressDocumentSchema = {
     required: true,
   },
   state: {
-    type: String,
-    required: true,
-  },
-  country: {
     type: String,
     required: true,
   },
