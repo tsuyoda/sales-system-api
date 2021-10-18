@@ -6,7 +6,7 @@ import { IDbRole } from './IRole';
 export interface IUserData extends IPerson {
   name: string;
   email: string;
-  password: string;
+  password?: string;
   role: string | Schema.Types.ObjectId;
 }
 
