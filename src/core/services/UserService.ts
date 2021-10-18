@@ -4,7 +4,6 @@ import UserModel from '../models/UserModel';
 import RoleModel from '../models/RoleModel';
 import { Schema } from 'mongoose';
 import { PaginationModel } from 'mongoose-paginate-ts';
-import { REGEX_PASSWORD } from './../constants/regex';
 
 class UserService {
   async create(data: IUserData): Promise<IDbUser> {
@@ -13,8 +12,8 @@ class UserService {
     return UserModel.create(data);
   }
 
-  async update(id: string | Schema.Types.ObjectId, data: IUserData): Promise<IDbUser> {
-    await this.userDataValidation(data);
+  async update(id: string, data: IUserData): Promise<IDbUser> {
+    await this.userDataValidation(data, id);
 
     const user = await UserModel.findByIdAndUpdate(id, data);
 
@@ -26,9 +25,13 @@ class UserService {
   }
 
   async list(data: IUserParams): Promise<PaginationModel<IDbUser>> {
-    const { name, fullName, role, page, limit, sort, ...rest } = data;
+    const { name, fullName, role, doc, page, limit, sort, ...rest } = data;
 
     const payload: IUserSearchFields = { ...rest };
+
+    if (doc) {
+      payload['doc.id'] = doc;
+    }
 
     if (name) {
       payload.name = { $regex: new RegExp(name, 'i') };
@@ -83,28 +86,28 @@ class UserService {
     return user;
   }
 
-  private async userDataValidation(data: IUserData): Promise<void> {
-    const { name, email, role, password } = data;
+  private async userDataValidation(data: IUserData, id: string = ''): Promise<void> {
+    const { name, email, role, doc } = data;
 
-    const regex = new RegExp(REGEX_PASSWORD);
+    const findByName = await UserModel.findOne({ name });
+    console.log(findByName);
+    const findByDoc = await UserModel.findOne({ 'doc.id': doc.id });
+    const findByEmail = await UserModel.findOne({ email });
 
-    if (!regex.test(password)) {
-      throw new ApiError(
-        400,
-        'Password must contain at least 8 characters, one uppercase, one number and one special case character'
-      );
+    if (findByName && (id ? findByName._id.toString() !== id : true)) {
+      throw new ApiError(400, `Nome de usuário "${name}" já está em uso`);
     }
 
-    if (await UserModel.findOne({ name })) {
-      throw new ApiError(400, 'name already in use');
+    if (findByDoc && (id ? findByDoc._id.toString() !== id : true)) {
+      throw new ApiError(400, `Documento "${doc.id}" já está em uso`);
     }
 
-    if (await UserModel.findOne({ email })) {
-      throw new ApiError(400, 'email already in use');
+    if (findByEmail && (id ? findByEmail._id.toString() !== id : true)) {
+      throw new ApiError(400, `E-mail de usuário "${email}" já está em uso`);
     }
 
     if (!(await RoleModel.findById(role))) {
-      throw new ApiError(400, 'role does not exist');
+      throw new ApiError(400, `Função de id ${role} não existe`);
     }
   }
 }
