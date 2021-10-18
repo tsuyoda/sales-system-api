@@ -4,7 +4,7 @@ import PersonSchema from './sharedSchemas/PersonSchema';
 import { IDbCostumer } from './../interfaces/ICostumer';
 
 const CostumerSchema = new mongoose.Schema<IDbCostumer>({
-  ...PersonSchema.obj,
+  ...PersonSchema,
   participatePointsProgram: {
     type: Boolean,
     default: false,

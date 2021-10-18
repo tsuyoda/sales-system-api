@@ -5,8 +5,8 @@ import { mongoosePagination, Pagination } from 'mongoose-paginate-ts';
 import PersonSchema from './sharedSchemas/PersonSchema';
 
 const UserSchema = new mongoose.Schema<IDbUser>({
-  ...PersonSchema.obj,
-  username: {
+  ...PersonSchema,
+  name: {
     type: String,
     unique: true,
     lowercase: true,

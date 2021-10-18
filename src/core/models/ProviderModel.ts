@@ -4,7 +4,7 @@ import { mongoosePagination, Pagination } from 'mongoose-paginate-ts';
 import PersonSchema from './sharedSchemas/PersonSchema';
 
 const ProviderSchema = new mongoose.Schema<IDbProvider>({
-  ...PersonSchema.obj,
+  ...PersonSchema,
   createdAt: {
     type: Date,
     default: Date.now,
