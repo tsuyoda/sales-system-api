@@ -2,6 +2,26 @@ import * as Yup from 'yup';
 
 import ApiError from '../../core/exceptions/ApiError';
 import { Request } from 'express';
+import { REGEX_OBJECT_ID, REGEX_PASSWORD } from '../../core/constants/regex';
+
+const docSchema = Yup.object({
+  id: Yup.string().required(),
+  type: Yup.string().oneOf(['F', 'J']).required(),
+});
+
+const contactSchema = Yup.object({
+  email: Yup.string().email().required(),
+  tel: Yup.string().required(),
+});
+
+const addressSchema = Yup.object({
+  street: Yup.string().required(),
+  number: Yup.number().required(),
+  complement: Yup.string().optional(),
+  city: Yup.string().required(),
+  state: Yup.string().required(),
+  postalCode: Yup.string().required(),
+});
 
 class UserValidator {
   async create(req: Request) {
@@ -9,10 +29,16 @@ class UserValidator {
       name: Yup.string().required(),
       fullName: Yup.string().required(),
       email: Yup.string().email().lowercase().required(),
-      password: Yup.string().required(),
-      role: Yup.string()
-        .matches(/^[0-9a-fA-F]{24}$/, 'role must be a ObjectId')
+      password: Yup.string()
+        .matches(
+          new RegExp(REGEX_PASSWORD),
+          'Password must contain at least 8 characters, one uppercase, one number and one special case character'
+        )
         .required(),
+      role: Yup.string().matches(new RegExp(REGEX_OBJECT_ID), 'role must be a ObjectId').required(),
+      doc: docSchema,
+      address: addressSchema,
+      contact: contactSchema,
     });
 
     return schema.validate(req.body).catch(err => {
@@ -22,16 +48,14 @@ class UserValidator {
 
   async update(req: Request) {
     const schema = Yup.object({
-      id: Yup.string()
-        .matches(/^[0-9a-fA-F]{24}$/, 'id must be a ObjectId')
-        .required(),
+      id: Yup.string().matches(new RegExp(REGEX_OBJECT_ID), 'id must be a ObjectId').required(),
       name: Yup.string().required(),
       fullName: Yup.string().required(),
-      email: Yup.string().lowercase().required(),
-      password: Yup.string().required(),
-      role: Yup.string()
-        .matches(/^[0-9a-fA-F]{24}$/, 'role must be a ObjectId')
-        .required(),
+      email: Yup.string().email().lowercase().required(),
+      role: Yup.string().matches(new RegExp(REGEX_OBJECT_ID), 'role must be a ObjectId').required(),
+      doc: docSchema,
+      address: addressSchema,
+      contact: contactSchema,
     });
 
     return schema.validate({ ...req.params, ...req.body }).catch(err => {
@@ -44,6 +68,7 @@ class UserValidator {
       name: Yup.string().optional(),
       fullName: Yup.string().optional(),
       email: Yup.string().email().optional(),
+      doc: Yup.string().optional(),
       role: Yup.object({
         name: Yup.lazy(val =>
           Array.isArray(val) ? Yup.array().of(Yup.string()).optional() : Yup.string().optional()
