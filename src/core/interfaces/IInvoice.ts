@@ -1,6 +1,6 @@
 import { Document, Types } from 'mongoose';
 import { IDbOrder } from './IOrder';
-import { IDbCostumer } from './ICostumer';
+import { IDbCustomer } from './ICustomer';
 import { IDbProduct } from './IProduct';
 
 interface IInvoiceValue {
@@ -21,7 +21,7 @@ export interface IDbInvoice extends Document {
   UF: string;
   value: IInvoiceValue;
   order: string | Types.ObjectId | IDbOrder;
-  costumer: string | Types.ObjectId | IDbCostumer;
+  customer: string | Types.ObjectId | IDbCustomer;
   createdAt: Date;
 }
 

@@ -1,6 +1,6 @@
 import { Schema, Document } from 'mongoose';
 import { IDbPermission } from './IPermission';
-import { IDbCostumer } from './ICostumer';
+import { IDbCustomer } from './ICustomer';
 
 export interface IDbScoreLevel extends Document {
   name: string;
@@ -11,7 +11,7 @@ export interface IDbScoreLevel extends Document {
 
 export interface IDbScore extends Document {
   points: number;
-  costumer: string | Schema.Types.ObjectId | IDbCostumer;
+  customer: string | Schema.Types.ObjectId | IDbCustomer;
   scoreLevel: string | Schema.Types.ObjectId | IDbScoreLevel;
   createdAt: Date;
 }
