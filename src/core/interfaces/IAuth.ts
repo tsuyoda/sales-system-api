@@ -1,3 +1,5 @@
+import { Schema } from 'mongoose';
+
 export interface IAuth {
   token: string;
   expiresAt: Date;
@@ -20,6 +22,8 @@ export interface IAuthData {
 }
 
 export interface IDecodedJWT {
-  id: string;
+  id: Schema.Types.ObjectId;
   name: string;
+  roleId: Schema.Types.ObjectId;
+  isAdmin: boolean;
 }

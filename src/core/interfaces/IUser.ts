@@ -11,6 +11,7 @@ export interface IUserData extends IPerson {
 }
 
 export interface IUserParams {
+  isAdmin?: boolean;
   name?: string;
   fullName?: string;
   email?: string;

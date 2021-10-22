@@ -1,11 +1,11 @@
 import { Schema, Document } from 'mongoose';
-import { IDbPermission } from './IPermission';
+import { IDbBenifit } from './IBenifit';
 import { IDbCostumer } from './ICostumer';
 
 export interface IDbScoreLevel extends Document {
   name: string;
   pointsThreshold: number;
-  benefits: string[] | Schema.Types.ObjectId[] | IDbPermission[];
+  benefits: string[] | Schema.Types.ObjectId[] | IDbBenifit[];
   createdAt: Date;
 }
 

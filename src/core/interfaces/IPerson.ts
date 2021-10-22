@@ -2,7 +2,7 @@ export interface IPerson {
   fullName: string;
   doc: {
     id: string;
-    type: string;
+    type: 'F' | 'J';
   };
   contact: {
     email: string;
