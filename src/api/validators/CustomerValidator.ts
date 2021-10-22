@@ -6,7 +6,7 @@ import { REGEX_OBJECT_ID } from '../../core/constants/regex';
 
 const docSchema = Yup.object({
   id: Yup.string().required(),
-  type: Yup.string().oneOf(['F', 'J']).required(),
+  type: Yup.mixed<'F' | 'J'>().oneOf(['F', 'J']).required(),
 });
 
 const contactSchema = Yup.object({
