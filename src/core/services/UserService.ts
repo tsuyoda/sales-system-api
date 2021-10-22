@@ -25,7 +25,7 @@ class UserService {
   }
 
   async list(data: IUserParams): Promise<PaginationModel<IDbUser>> {
-    const { name, fullName, role, doc, page, limit, sort, ...rest } = data;
+    const { name, fullName, role, doc, page, limit, sort, isAdmin, ...rest } = data;
 
     const payload: IUserSearchFields = { ...rest };
 
@@ -44,7 +44,11 @@ class UserService {
     if (role && role.name) {
       const names = Array.isArray(role.name) ? role.name : [role.name];
 
-      const roles = await RoleModel.find({ name: { $in: names } });
+      const roles = await RoleModel.find({ name: { $in: names }, isAdmin });
+
+      payload.role = { $in: roles.map(role => role._id) };
+    } else if (!isAdmin) {
+      const roles = await RoleModel.find({ isAdmin });
 
       payload.role = { $in: roles.map(role => role._id) };
     }
@@ -52,7 +56,13 @@ class UserService {
     const options = {
       query: payload,
       sort: { createdAt: sort },
-      populate: 'role',
+      populate: {
+        path: 'role',
+        populate: {
+          path: 'permissions',
+          populate: 'resource',
+        },
+      },
       page,
       limit,
     };
@@ -67,7 +77,13 @@ class UserService {
   }
 
   async show(id: string | Schema.Types.ObjectId): Promise<IDbUser> {
-    const user = await UserModel.findById(id).populate('role');
+    const user = await UserModel.findById(id).populate({
+      path: 'role',
+      populate: {
+        path: 'permissions',
+        populate: 'resource',
+      },
+    });
 
     if (!user) {
       throw new ApiError(404, 'user not found');
@@ -90,7 +106,6 @@ class UserService {
     const { name, email, role, doc } = data;
 
     const findByName = await UserModel.findOne({ name });
-    console.log(findByName);
     const findByDoc = await UserModel.findOne({ 'doc.id': doc.id });
     const findByEmail = await UserModel.findOne({ email });
 

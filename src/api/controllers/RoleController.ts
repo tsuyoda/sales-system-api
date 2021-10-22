@@ -34,7 +34,10 @@ class RoleController extends Controller {
     try {
       const data = await RoleValidator.list(req);
 
-      const { docs, ...paginator } = await RoleService.list(data);
+      const { docs, ...paginator } = await RoleService.list({
+        ...data,
+        isAdmin: req.user?.isAdmin,
+      });
 
       super.response(res, docs, 200, paginator);
     } catch (err) {
