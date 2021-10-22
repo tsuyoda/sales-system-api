@@ -5,8 +5,10 @@ declare global {
   namespace Express {
     interface Request {
       user?: {
-        id: string | Schema.Types.ObjectId;
+        id: Schema.Types.ObjectId;
         name: string;
+        roleId: Schema.Types.ObjectId;
+        isAdmin: boolean;
       };
     }
   }
