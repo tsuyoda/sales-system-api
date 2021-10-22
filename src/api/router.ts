@@ -5,8 +5,9 @@ import ApiError from '../core/exceptions/ApiError';
 import roleRoutes from './routes/roleRoutes';
 import userRoutes from './routes/userRoutes';
 import authRoutes from './routes/authRoutes';
-import auth from './middlewares/auth';
+import { auth } from './middlewares/auth';
 import providerRoutes from './routes/providerRoutes';
+import resourceRoutes from './routes/resourceRoutes';
 
 const router = express.Router();
 
@@ -18,6 +19,7 @@ router.use(auth);
 
 router.use('/product', productRoutes);
 router.use('/role', roleRoutes);
+router.use('/resource', resourceRoutes);
 router.use('/user', userRoutes);
 router.use('/provider', providerRoutes);
 
