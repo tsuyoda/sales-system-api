@@ -7,9 +7,9 @@ const ScoreSchema = new mongoose.Schema<IDbScore>({
     type: Number,
     required: true,
   },
-  costumer: {
+  customer: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Costumer',
+    ref: 'Customer',
     required: true,
   },
   scoreLevel: {

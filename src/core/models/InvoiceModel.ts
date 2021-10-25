@@ -60,9 +60,9 @@ const InvoiceSchema = new mongoose.Schema<IDbInvoice>({
     ref: 'Order',
     required: true,
   },
-  costumer: {
+  customer: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Costumer',
+    ref: 'Customer',
     required: true,
   },
   createdAt: {
