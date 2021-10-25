@@ -14,7 +14,11 @@ const MeasurementUnitDocSchema = {
 };
 
 const ProductSchema = new mongoose.Schema<IDbProduct>({
-  name: {
+  sku: {
+    type: String,
+    required: true,
+  },
+  title: {
     type: String,
     required: true,
   },

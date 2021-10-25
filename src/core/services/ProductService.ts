@@ -9,24 +9,17 @@ import ApiError from '../exceptions/ApiError';
 import ProductModel from '../models/productModel';
 import { Schema } from 'mongoose';
 import { PaginationModel } from 'mongoose-paginate-ts';
+import ProviderModel from './../models/ProviderModel';
 
 class ProductService {
   async create(data: IProductData): Promise<IDbProduct> {
-    const { title } = data;
-
-    if (await ProductModel.findOne({ title })) {
-      throw new ApiError(400, 'title already in use');
-    }
+    await this.productDataValidation(data);
 
     return ProductModel.create(data);
   }
 
-  async update(id: string | Schema.Types.ObjectId, data: IProductData): Promise<IDbProduct> {
-    const { title } = data;
-
-    if (await ProductModel.findOne({ title })) {
-      throw new ApiError(400, 'title already in use');
-    }
+  async update(id: string, data: IProductData): Promise<IDbProduct> {
+    await this.productDataValidation(data, id);
 
     const product = await ProductModel.findByIdAndUpdate(id, data);
 
@@ -38,9 +31,9 @@ class ProductService {
   }
 
   async list(data: IProductParams): Promise<PaginationModel<IDbProduct>> {
-    const { title, page, limit, sort } = data;
+    const { title, page, limit, sort, ...rest } = data;
 
-    const payload: IProductSearchFields = {};
+    const payload: IProductSearchFields = { ...rest };
 
     if (title) {
       const regex = new RegExp(title, 'i');
@@ -81,6 +74,20 @@ class ProductService {
     }
 
     return product;
+  }
+
+  private async productDataValidation(data: IProductData, id: string = ''): Promise<void> {
+    const { sku, provider } = data;
+
+    const findBySku = await ProductModel.findOne({ sku });
+
+    if (findBySku && (id ? findBySku._id.toString() !== id : true)) {
+      throw new ApiError(400, `SKU "${sku}" já está em uso`);
+    }
+
+    if (!(await ProviderModel.findById(provider))) {
+      throw new ApiError(400, `Fornecedor de id ${provider} não existe`);
+    }
   }
 }
 

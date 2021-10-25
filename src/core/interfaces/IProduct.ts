@@ -2,20 +2,31 @@ import { Document, Types } from 'mongoose';
 import { IDbProvider } from './IProvider';
 
 export interface IProductData {
+  sku: string;
   title: string;
-  description: string;
+  description?: string;
   value: number;
-  amount: number;
+  quantity: number;
+  measurementUnit: IProductMeasurementUnit;
+  length: number;
+  width: number;
+  height: number;
+  weight: number;
+  provider: string;
 }
 
 export interface IProductParams {
   title?: string;
+  provider?: string;
+  sku?: string;
   page?: number;
   limit?: number;
   sort?: string;
 }
 
 export interface IProductSearchFields {
+  provider?: string;
+  sku?: string;
   title?: {
     $regex: RegExp;
   };
@@ -27,7 +38,8 @@ interface IProductMeasurementUnit {
 }
 
 export interface IDbProduct extends Document {
-  name: string;
+  sku: string;
+  title: string;
   description?: string;
   value: number;
   quantity: number;
