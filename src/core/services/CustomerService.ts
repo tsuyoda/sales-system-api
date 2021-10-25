@@ -1,5 +1,10 @@
 import ApiError from '../exceptions/ApiError';
-import { IDbCustomer, ICustomerData, ICustomerParams, ICustomerSearchFields } from '../interfaces/ICustomer';
+import {
+  IDbCustomer,
+  ICustomerData,
+  ICustomerParams,
+  ICustomerSearchFields,
+} from '../interfaces/ICustomer';
 import CustomerModel from '../models/CustomerModel';
 import { Schema } from 'mongoose';
 import { PaginationModel } from 'mongoose-paginate-ts';
@@ -24,16 +29,12 @@ class CustomerService {
   }
 
   async list(data: ICustomerParams): Promise<PaginationModel<IDbCustomer>> {
-    const { name, fullName, doc, page, limit, sort, ...rest } = data;
+    const { fullName, doc, page, limit, sort, ...rest } = data;
 
     const payload: ICustomerSearchFields = { ...rest };
 
     if (doc) {
       payload['doc.id'] = doc;
-    }
-
-    if (name) {
-      payload.name = { $regex: new RegExp(name, 'i') };
     }
 
     if (fullName) {
@@ -77,16 +78,10 @@ class CustomerService {
   }
 
   private async customerDataValidation(data: ICustomerData, id: string = ''): Promise<void> {
-    const { name, doc, contact } = data;
+    const { doc, contact } = data;
 
-    const findByName = await CustomerModel.findOne({ name });
-    console.log(findByName);
     const findByDoc = await CustomerModel.findOne({ 'doc.id': doc.id });
     const findByEmail = await CustomerModel.findOne({ 'contact.email': contact.email });
-
-    if (findByName && (id ? findByName._id.toString() !== id : true)) {
-      throw new ApiError(400, `Nome de cliente "${name}" já está em uso`);
-    }
 
     if (findByDoc && (id ? findByDoc._id.toString() !== id : true)) {
       throw new ApiError(400, `Documento "${doc.id}" já está em uso`);

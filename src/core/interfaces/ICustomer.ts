@@ -2,13 +2,11 @@ import { Document } from 'mongoose';
 import { IDbUser } from './IUser';
 import { IPerson } from './IPerson';
 
-
 export interface ICustomerData extends IPerson {
-  name: string;
+  participatePointsProgram: boolean;
 }
 
 export interface ICustomerParams {
-  name?: string;
   fullName?: string;
   email?: string;
   doc?: string;
@@ -18,16 +16,12 @@ export interface ICustomerParams {
 }
 
 export interface ICustomerSearchFields {
-  name?: {
-    $regex: RegExp;
-  };
   fullName?: {
     $regex: RegExp;
   };
   'doc.id'?: string;
   email?: string;
 }
-
 
 export interface IDbCustomer extends Document, IDbUser {
   participatePointsProgram: boolean;

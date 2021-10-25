@@ -26,12 +26,11 @@ const addressSchema = Yup.object({
 class CustomerValidator {
   async create(req: Request) {
     const schema = Yup.object({
-      name: Yup.string().required(),
       fullName: Yup.string().required(),
       doc: docSchema,
       address: addressSchema,
       contact: contactSchema,
-      participatePointsProgram: Yup.boolean().required()
+      participatePointsProgram: Yup.boolean().required(),
     });
 
     return schema.validate(req.body).catch(err => {
@@ -42,12 +41,11 @@ class CustomerValidator {
   async update(req: Request) {
     const schema = Yup.object({
       id: Yup.string().matches(new RegExp(REGEX_OBJECT_ID), 'id must be a ObjectId').required(),
-      name: Yup.string().required(),
       fullName: Yup.string().required(),
       doc: docSchema,
       address: addressSchema,
       contact: contactSchema,
-      participatePointsProgram: Yup.boolean().required()
+      participatePointsProgram: Yup.boolean().required(),
     });
 
     return schema.validate({ ...req.params, ...req.body }).catch(err => {
@@ -57,7 +55,6 @@ class CustomerValidator {
 
   async list(req: Request) {
     const schema = Yup.object({
-      name: Yup.string().optional(),
       fullName: Yup.string().optional(),
       email: Yup.string().email().optional(),
       doc: Yup.string().optional(),
