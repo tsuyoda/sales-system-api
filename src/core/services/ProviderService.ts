@@ -1,14 +1,19 @@
 import { Schema } from 'mongoose';
 import { PaginationModel } from 'mongoose-paginate-ts';
 import ApiError from '../exceptions/ApiError';
-import { IDbProvider, IProviderData, IProviderParams, IProviderSearchFields } from '../interfaces/IProvider';
+import {
+  IDbProvider,
+  IProviderData,
+  IProviderParams,
+  IProviderSearchFields,
+} from '../interfaces/IProvider';
 import ProviderModel from '../models/ProviderModel';
 
 class ProviderService {
   async create(data: IProviderData): Promise<IDbProvider> {
-    const { name } = data;
+    const { fullName } = data;
 
-    if (await ProviderModel.findOne({ name })) {
+    if (await ProviderModel.findOne({ fullName })) {
       throw new ApiError(400, 'name already in use');
     }
 
@@ -26,13 +31,13 @@ class ProviderService {
   }
 
   async list(data: IProviderParams): Promise<PaginationModel<IDbProvider>> {
-    const { name, page, limit, sort } = data;
+    const { fullName, page, limit, sort } = data;
 
     const payload: IProviderSearchFields = {};
 
-    if (name) {
-      const regex = new RegExp(name, 'i');
-      payload.name = { $regex: regex };
+    if (fullName) {
+      const regex = new RegExp(fullName, 'i');
+      payload.fullName = { $regex: regex };
     }
 
     const options = {
@@ -69,6 +74,16 @@ class ProviderService {
     }
 
     return provider;
+  }
+
+  async providerDataValidation(data: IProviderData, id = '') {
+    const { fullName } = data;
+
+    const findByName = await ProviderModel.findOne({ fullName });
+
+    if (findByName && (id ? findByName._id.toString() !== id : true)) {
+      throw new ApiError(400, `Nome de fornecedor "${fullName}" já está em uso`);
+    }
   }
 }
 
