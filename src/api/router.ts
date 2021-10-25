@@ -9,6 +9,7 @@ import { auth } from './middlewares/auth';
 import providerRoutes from './routes/providerRoutes';
 import resourceRoutes from './routes/resourceRoutes';
 import customerRoutes from './routes/customerRoutes';
+import sellerRoutes from './routes/sellerRoutes';
 
 const router = express.Router();
 
@@ -24,6 +25,7 @@ router.use('/resource', resourceRoutes);
 router.use('/user', userRoutes);
 router.use('/provider', providerRoutes);
 router.use('/customer', customerRoutes);
+router.use('/seller', sellerRoutes);
 
 router.all('*', () => {
   throw new ApiError(404, 'Route not found');
