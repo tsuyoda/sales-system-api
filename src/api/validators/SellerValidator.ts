@@ -32,6 +32,7 @@ class UserValidator {
 
   async list(req: Request) {
     const schema = Yup.object({
+      user: Yup.string().matches(new RegExp(REGEX_OBJECT_ID), 'user must be a ObjectId').optional(),
       page: Yup.number().integer().default(1),
       limit: Yup.number().integer().default(10),
       sort: Yup.string().oneOf(['asc', 'desc']).default('desc'),

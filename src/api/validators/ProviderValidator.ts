@@ -54,6 +54,8 @@ class ProviderValidator {
   async list(req: Request) {
     const schema = Yup.object({
       fullName: Yup.string().optional(),
+      email: Yup.string().email().optional(),
+      doc: Yup.string().optional(),
       page: Yup.number().integer().default(1),
       limit: Yup.number().integer().default(10),
       sort: Yup.string().oneOf(['asc', 'desc']).default('desc'),
