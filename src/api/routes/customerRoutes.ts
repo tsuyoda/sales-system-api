@@ -4,10 +4,10 @@ import { accessControl } from '../middlewares/auth';
 
 const customerRoutes = express.Router();
 
-customerRoutes.post('/', accessControl('create', 'clients'), CustomerController.create);
-customerRoutes.get('/:id', accessControl('create', 'clients'), CustomerController.show);
-customerRoutes.get('/', accessControl('create', 'clients'), CustomerController.list);
-customerRoutes.delete('/:id', accessControl('create', 'clients'), CustomerController.delete);
-customerRoutes.put('/:id', accessControl('create', 'clients'), CustomerController.update);
+customerRoutes.post('/', accessControl('create', 'customers'), CustomerController.create);
+customerRoutes.get('/:id', accessControl('read', 'customers'), CustomerController.show);
+customerRoutes.get('/', accessControl('read', 'customers'), CustomerController.list);
+customerRoutes.delete('/:id', accessControl('delete', 'customers'), CustomerController.delete);
+customerRoutes.put('/:id', accessControl('update', 'customers'), CustomerController.update);
 
 export default customerRoutes;

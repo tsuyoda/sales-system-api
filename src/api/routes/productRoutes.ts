@@ -6,6 +6,11 @@ const productRoutes = express.Router();
 
 productRoutes.post('/', accessControl('create', 'products'), ProductController.create);
 productRoutes.get('/:id', accessControl('read', 'products'), ProductController.show);
+productRoutes.get(
+  '/:id/history-price',
+  accessControl('read', 'products'),
+  ProductController.priceHistory
+);
 productRoutes.get('/', accessControl('read', 'products'), ProductController.list);
 productRoutes.delete('/:id', accessControl('delete', 'products'), ProductController.delete);
 productRoutes.put('/:id', accessControl('update', 'products'), ProductController.update);
