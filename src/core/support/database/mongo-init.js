@@ -34,9 +34,9 @@ db.resources.findOne({ name: 'products' }) ||
     availableActions: ['create', 'read', 'update', 'delete'],
   });
 
-db.resources.findOne({ name: 'clients' }) ||
+db.resources.findOne({ name: 'customers' }) ||
   db.resources.insertOne({
-    name: 'clients',
+    name: 'customers',
     translatedName: 'Clientes',
     availableActions: ['create', 'read', 'update', 'delete'],
   });
@@ -59,5 +59,12 @@ db.resources.findOne({ name: 'roles' }) ||
   db.resources.insertOne({
     name: 'roles',
     translatedName: 'Nível de Acesso',
+    availableActions: ['create', 'read', 'update', 'delete'],
+  });
+
+db.resources.findOne({ name: 'providers' }) ||
+  db.resources.insertOne({
+    name: 'providers',
+    translatedName: 'Fornecedores',
     availableActions: ['create', 'read', 'update', 'delete'],
   });
