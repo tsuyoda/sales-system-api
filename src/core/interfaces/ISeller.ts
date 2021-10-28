@@ -8,6 +8,7 @@ export interface ISellerData {
 }
 
 export interface ISellerParams {
+  user?: string;
   page?: number;
   limit?: number;
   sort?: string;
