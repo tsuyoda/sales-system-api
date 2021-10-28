@@ -25,9 +25,10 @@ class SellerService {
   }
 
   async list(data: ISellerParams): Promise<PaginationModel<IDbSeller>> {
-    const { page, limit, sort } = data;
+    const { page, limit, sort, ...rest } = data;
 
     const options = {
+      query: { ...rest },
       sort: { createdAt: sort },
       populate: 'user',
       page,

@@ -3,6 +3,7 @@ import {
   IProductData,
   IProductParams,
   IProductSearchFields,
+  IDbProductPrice,
 } from '../interfaces/IProduct';
 
 import ApiError from '../exceptions/ApiError';
@@ -10,12 +11,22 @@ import ProductModel from '../models/productModel';
 import { Schema } from 'mongoose';
 import { PaginationModel } from 'mongoose-paginate-ts';
 import ProviderModel from './../models/ProviderModel';
+import ProductPriceModel from '../models/ProductPriceModel';
 
 class ProductService {
   async create(data: IProductData): Promise<IDbProduct> {
     await this.productDataValidation(data);
 
-    return ProductModel.create(data);
+    const product = await ProductModel.create(data);
+
+    const productPriceData = {
+      value: data.value,
+      product: product._id,
+    };
+
+    await ProductPriceModel.create(productPriceData);
+
+    return product;
   }
 
   async update(id: string, data: IProductData): Promise<IDbProduct> {
@@ -25,6 +36,15 @@ class ProductService {
 
     if (!product) {
       throw new ApiError(404, 'product not found');
+    }
+
+    if (product.value !== data.value) {
+      const productPriceData = {
+        value: data.value,
+        product: product._id,
+      };
+
+      await ProductPriceModel.create(productPriceData);
     }
 
     return product;
@@ -43,6 +63,7 @@ class ProductService {
     const options = {
       query: payload,
       sort: { createdAt: sort },
+      populate: 'provider',
       page,
       limit,
     };
@@ -57,7 +78,7 @@ class ProductService {
   }
 
   async show(id: string | Schema.Types.ObjectId): Promise<IDbProduct> {
-    const product = await ProductModel.findById(id);
+    const product = await ProductModel.findById(id).populate('provider');
 
     if (!product) {
       throw new ApiError(404, 'product not found');
@@ -74,6 +95,16 @@ class ProductService {
     }
 
     return product;
+  }
+
+  async priceHistory(id: string | Schema.Types.ObjectId): Promise<IDbProductPrice[]> {
+    const product = await ProductModel.findById(id);
+
+    if (!product) {
+      throw new ApiError(404, 'product not found');
+    }
+
+    return ProductPriceModel.find({ product: product._id });
   }
 
   private async productDataValidation(data: IProductData, id: string = ''): Promise<void> {

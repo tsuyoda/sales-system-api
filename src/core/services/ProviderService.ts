@@ -31,9 +31,17 @@ class ProviderService {
   }
 
   async list(data: IProviderParams): Promise<PaginationModel<IDbProvider>> {
-    const { fullName, page, limit, sort } = data;
+    const { fullName, doc, email, page, limit, sort } = data;
 
     const payload: IProviderSearchFields = {};
+
+    if (doc) {
+      payload['doc.id'] = doc;
+    }
+
+    if (email) {
+      payload['contact.email'] = email;
+    }
 
     if (fullName) {
       const regex = new RegExp(fullName, 'i');

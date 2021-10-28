@@ -29,12 +29,16 @@ class CustomerService {
   }
 
   async list(data: ICustomerParams): Promise<PaginationModel<IDbCustomer>> {
-    const { fullName, doc, page, limit, sort, ...rest } = data;
+    const { fullName, doc, email, page, limit, sort } = data;
 
-    const payload: ICustomerSearchFields = { ...rest };
+    const payload: ICustomerSearchFields = {};
 
     if (doc) {
       payload['doc.id'] = doc;
+    }
+
+    if (email) {
+      payload['contact.email'] = email;
     }
 
     if (fullName) {
