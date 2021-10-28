@@ -3,7 +3,7 @@ import { mongoosePagination, Pagination } from 'mongoose-paginate-ts';
 import { IDbSeller } from './../interfaces/ISeller';
 
 const SellerSchema = new mongoose.Schema<IDbSeller>({
-  commission: {
+  comission: {
     type: Number,
     required: true,
   },

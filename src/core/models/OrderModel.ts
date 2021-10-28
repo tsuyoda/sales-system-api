@@ -1,6 +1,21 @@
 import mongoose from '../support/database/mongo';
 import { mongoosePagination, Pagination } from 'mongoose-paginate-ts';
 import { IDbOrder } from './../interfaces/IOrder';
+import AutoIncrementFactory from 'mongoose-sequence';
+import { ItemsValuesDocumentSchema } from './sharedSchemas/ItemsSchema';
+
+const OrderItemSchema = {
+  quantity: {
+    type: Number,
+    required: true,
+  },
+  value: ItemsValuesDocumentSchema,
+  product: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Product',
+    required: true,
+  },
+};
 
 const OrderValuesDocumentSchema = {
   totalItems: {
@@ -11,10 +26,6 @@ const OrderValuesDocumentSchema = {
     type: Number,
     default: 0.0,
   },
-  paid: {
-    type: Number,
-    default: 0.0,
-  },
   total: {
     type: Number,
     required: true,
@@ -22,10 +33,6 @@ const OrderValuesDocumentSchema = {
 };
 
 const OrderDatesDocumentSchema = {
-  creation: {
-    type: Date,
-    required: true,
-  },
   delivery: {
     type: Date,
     required: true,
@@ -38,6 +45,14 @@ const OrderDatesDocumentSchema = {
 
 const OrderSchema = new mongoose.Schema<IDbOrder>({
   value: OrderValuesDocumentSchema,
+  discountPercentage: {
+    type: Number,
+    default: 0.0,
+  },
+  paymentType: {
+    type: String,
+    required: true,
+  },
   date: OrderDatesDocumentSchema,
   status: {
     type: String,
@@ -48,18 +63,22 @@ const OrderSchema = new mongoose.Schema<IDbOrder>({
     ref: 'Seller',
     required: true,
   },
-  costumer: {
+  customer: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Costumer',
+    ref: 'Customer',
     required: true,
   },
+  items: [OrderItemSchema],
   createdAt: {
     type: Date,
     default: Date.now,
   },
 });
 
+const AutoIncrement = AutoIncrementFactory(mongoose.connection);
+
 OrderSchema.plugin(mongoosePagination);
+OrderSchema.plugin(AutoIncrement, { inc_field: 'cod' });
 
 const SellerModel =
   (mongoose.models.Order as Pagination<IDbOrder>) ||
