@@ -10,6 +10,7 @@ import providerRoutes from './routes/providerRoutes';
 import resourceRoutes from './routes/resourceRoutes';
 import customerRoutes from './routes/customerRoutes';
 import sellerRoutes from './routes/sellerRoutes';
+import orderRoutes from './routes/orderRoutes';
 
 const router = express.Router();
 
@@ -26,6 +27,7 @@ router.use('/user', userRoutes);
 router.use('/provider', providerRoutes);
 router.use('/customer', customerRoutes);
 router.use('/seller', sellerRoutes);
+router.use('/order', orderRoutes);
 
 router.all('*', () => {
   throw new ApiError(404, 'Route not found');
