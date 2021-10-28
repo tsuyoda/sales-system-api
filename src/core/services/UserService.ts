@@ -44,12 +44,15 @@ class UserService {
     if (role && role.name) {
       const names = Array.isArray(role.name) ? role.name : [role.name];
 
-      const roles = await RoleModel.find({ name: { $in: names }, isAdmin });
+      const roleParams: any = {
+        name: { $in: names },
+      };
 
-      payload.role = { $in: roles.map(role => role._id) };
-    } else if (!isAdmin) {
-      const roles = await RoleModel.find({ isAdmin });
+      if (!isAdmin) {
+        roleParams.isAdmin = false;
+      }
 
+      const roles = await RoleModel.find(roleParams);
       payload.role = { $in: roles.map(role => role._id) };
     }
 
