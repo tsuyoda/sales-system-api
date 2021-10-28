@@ -2,17 +2,17 @@ import { NextFunction, Request, Response } from 'express';
 
 import Controller from './Controller';
 import SharedValidator from '../validators/SharedValidator';
-import SellerValidator from '../validators/SellerValidator';
-import SellerService from '../../core/services/SellerService';
+import OrderService from '../../core/services/OrderService';
+import OrderValidator from '../validators/OrderValidator';
 
-class SellerController extends Controller {
+class OrderController extends Controller {
   async create(req: Request, res: Response, next: NextFunction) {
     try {
-      const data = await SellerValidator.create(req);
+      const data = await OrderValidator.create(req);
 
-      const seller = await SellerService.create(data);
+      const order = await OrderService.create(data);
 
-      super.response(res, seller);
+      super.response(res, order);
     } catch (err) {
       next(err);
     }
@@ -20,11 +20,11 @@ class SellerController extends Controller {
 
   async update(req: Request, res: Response, next: NextFunction) {
     try {
-      const { id, ...data } = await SellerValidator.update(req);
+      const { id, ...data } = await OrderValidator.update(req);
 
-      const seller = await SellerService.update(id, data);
+      const order = await OrderService.update(id, data);
 
-      super.response(res, seller);
+      super.response(res, order);
     } catch (err) {
       next(err);
     }
@@ -32,9 +32,9 @@ class SellerController extends Controller {
 
   async list(req: Request, res: Response, next: NextFunction) {
     try {
-      const data = await SellerValidator.list(req);
+      const data = await OrderValidator.list(req);
 
-      const { docs, ...paginator } = await SellerService.list(data);
+      const { docs, ...paginator } = await OrderService.list(data);
 
       super.response(res, docs, 200, paginator);
     } catch (err) {
@@ -46,9 +46,9 @@ class SellerController extends Controller {
     try {
       const { id } = await SharedValidator.paramId(req);
 
-      const seller = await SellerService.show(id);
+      const order = await OrderService.show(id);
 
-      super.response(res, seller);
+      super.response(res, order);
     } catch (err) {
       next(err);
     }
@@ -58,13 +58,13 @@ class SellerController extends Controller {
     try {
       const { id } = await SharedValidator.paramId(req);
 
-      const seller = await SellerService.delete(id);
+      const order = await OrderService.delete(id);
 
-      super.response(res, seller);
+      super.response(res, order);
     } catch (err) {
       next(err);
     }
   }
 }
 
-export default new SellerController();
+export default new OrderController();

@@ -65,6 +65,18 @@ class ProductController extends Controller {
       next(err);
     }
   }
+
+  async priceHistory(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = await SharedValidator.paramId(req);
+
+      const product = await ProductService.priceHistory(id);
+
+      super.response(res, product);
+    } catch (err) {
+      next(err);
+    }
+  }
 }
 
 export default new ProductController();
