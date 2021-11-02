@@ -5,7 +5,6 @@ import { accessControl } from '../middlewares/auth';
 const userRoutes = express.Router();
 
 userRoutes.post('/', accessControl('create', 'users'), UserController.create);
-userRoutes.get('/my-profile', UserController.showMyProfile);
 userRoutes.get('/:id', accessControl('read', 'users'), UserController.show);
 userRoutes.get('/', accessControl('read', 'users'), UserController.list);
 userRoutes.delete('/:id', accessControl('delete', 'users'), UserController.delete);

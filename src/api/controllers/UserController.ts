@@ -66,7 +66,7 @@ class UserController extends Controller {
 
       const { id } = req.user;
 
-      const user = await UserService.show(id);
+      const user = await UserService.show(id.toString());
 
       super.response(res, user);
     } catch (err) {
