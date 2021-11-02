@@ -12,6 +12,7 @@ import customerRoutes from './routes/customerRoutes';
 import sellerRoutes from './routes/sellerRoutes';
 import orderRoutes from './routes/orderRoutes';
 import profileRoutes from './routes/profileRoutes';
+import benefitRoutes from './routes/benefitRoutes';
 
 const router = express.Router();
 
@@ -30,6 +31,7 @@ router.use('/customer', customerRoutes);
 router.use('/seller', sellerRoutes);
 router.use('/order', orderRoutes);
 router.use('/profile', profileRoutes);
+router.use('/benefit', benefitRoutes);
 
 router.all('*', () => {
   throw new ApiError(404, 'Route not found');

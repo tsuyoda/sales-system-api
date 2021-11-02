@@ -2,15 +2,15 @@ import { NextFunction, Request, Response } from 'express';
 
 import Controller from './Controller';
 import SharedValidator from '../validators/SharedValidator';
-import ResourceValidator from '../validators/ResourceValidator';
-import ResourceService from '../../core/services/ResourceService';
+import BenefitValidator from '../validators/BenefitValidator';
+import BenefitService from '../../core/services/BenefitService';
 
-class ResourceController extends Controller {
+class BenefitController extends Controller {
   async create(req: Request, res: Response, next: NextFunction) {
     try {
-      const data = await ResourceValidator.create(req);
+      const data = await BenefitValidator.create(req);
 
-      const role = await ResourceService.create(data);
+      const role = await BenefitService.create(data);
 
       super.response(res, role);
     } catch (err) {
@@ -20,9 +20,9 @@ class ResourceController extends Controller {
 
   async update(req: Request, res: Response, next: NextFunction) {
     try {
-      const { id, ...data } = await ResourceValidator.update(req);
+      const { id, ...data } = await BenefitValidator.update(req);
 
-      const role = await ResourceService.update(id, data);
+      const role = await BenefitService.update(id, data);
 
       super.response(res, role);
     } catch (err) {
@@ -32,9 +32,9 @@ class ResourceController extends Controller {
 
   async list(req: Request, res: Response, next: NextFunction) {
     try {
-      const data = await ResourceValidator.list(req);
+      const data = await BenefitValidator.list(req);
 
-      const { docs, ...paginator } = await ResourceService.list(data);
+      const { docs, ...paginator } = await BenefitService.list(data);
 
       super.response(res, docs, 200, paginator);
     } catch (err) {
@@ -46,7 +46,7 @@ class ResourceController extends Controller {
     try {
       const { id } = await SharedValidator.paramId(req);
 
-      const role = await ResourceService.show(id);
+      const role = await BenefitService.show(id);
 
       super.response(res, role);
     } catch (err) {
@@ -58,7 +58,7 @@ class ResourceController extends Controller {
     try {
       const { id } = await SharedValidator.paramId(req);
 
-      const role = await ResourceService.delete(id);
+      const role = await BenefitService.delete(id);
 
       super.response(res, role);
     } catch (err) {
@@ -67,4 +67,4 @@ class ResourceController extends Controller {
   }
 }
 
-export default new ResourceController();
+export default new BenefitController();

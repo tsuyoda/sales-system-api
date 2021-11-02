@@ -1,8 +1,8 @@
 import mongoose from '../support/database/mongo';
 import { mongoosePagination, Pagination } from 'mongoose-paginate-ts';
-import { IDbBenifit } from './../interfaces/IBenifit';
+import { IDbBenefit } from '../interfaces/IBenefit';
 
-const BenifitSchema = new mongoose.Schema<IDbBenifit>({
+const BenefitSchema = new mongoose.Schema<IDbBenefit>({
   name: {
     type: String,
     required: true,
@@ -26,10 +26,10 @@ const BenifitSchema = new mongoose.Schema<IDbBenifit>({
   },
 });
 
-BenifitSchema.plugin(mongoosePagination);
+BenefitSchema.plugin(mongoosePagination);
 
 const BenefitModel =
-  (mongoose.models.Benifit as Pagination<IDbBenifit>) ||
-  mongoose.model<IDbBenifit, Pagination<IDbBenifit>>('Benifit', BenifitSchema);
+  (mongoose.models.Benifit as Pagination<IDbBenefit>) ||
+  mongoose.model<IDbBenefit, Pagination<IDbBenefit>>('Benefit', BenefitSchema);
 
 export default BenefitModel;
