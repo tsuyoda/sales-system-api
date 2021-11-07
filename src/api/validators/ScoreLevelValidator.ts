@@ -4,15 +4,16 @@ import ApiError from '../../core/exceptions/ApiError';
 import { Request } from 'express';
 import { REGEX_OBJECT_ID } from '../../core/constants/regex';
 
-class BenefitValidator {
+class ScoreLevelValidator {
   async create(req: Request) {
     const schema = Yup.object({
       name: Yup.string().required(),
-      description: Yup.string().optional(),
-      type: Yup.mixed<'purchase_discount' | 'shipping_discount'>()
-        .oneOf(['purchase_discount', 'shipping_discount'])
+      pointsThreshold: Yup.number().required(),
+      benefits: Yup.array()
+        .of(
+          Yup.string().matches(new RegExp(REGEX_OBJECT_ID), 'benefit must be a ObjectId').required()
+        )
         .required(),
-      value: Yup.number().required(),
     });
 
     return schema.validate(req.body).catch(err => {
@@ -24,11 +25,12 @@ class BenefitValidator {
     const schema = Yup.object({
       id: Yup.string().matches(new RegExp(REGEX_OBJECT_ID), 'id must be a ObjectId').required(),
       name: Yup.string().required(),
-      description: Yup.string().optional(),
-      type: Yup.mixed<'purchase_discount' | 'shipping_discount'>()
-        .oneOf(['purchase_discount', 'shipping_discount'])
+      pointsThreshold: Yup.number().required(),
+      benefits: Yup.array()
+        .of(
+          Yup.string().matches(new RegExp(REGEX_OBJECT_ID), 'benefit must be a ObjectId').required()
+        )
         .required(),
-      value: Yup.number().required(),
     });
 
     return schema.validate({ ...req.params, ...req.body }).catch(err => {
@@ -50,4 +52,4 @@ class BenefitValidator {
   }
 }
 
-export default new BenefitValidator();
+export default new ScoreLevelValidator();

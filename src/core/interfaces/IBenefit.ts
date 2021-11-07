@@ -8,9 +8,16 @@ export interface IBenefitData {
 }
 
 export interface IBenefitParams {
+  name?: string;
   page?: number;
   limit?: number;
   sort?: string;
+}
+
+export interface IBenefitSearchFields {
+  name?: {
+    $regex: RegExp;
+  };
 }
 
 export interface IDbBenefit extends Document {

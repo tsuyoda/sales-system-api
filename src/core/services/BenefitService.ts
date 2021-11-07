@@ -1,7 +1,12 @@
 import { Schema } from 'mongoose';
 import { PaginationModel } from 'mongoose-paginate-ts';
 import ApiError from '../exceptions/ApiError';
-import { IDbBenefit, IBenefitData, IBenefitParams } from '../interfaces/IBenefit';
+import {
+  IDbBenefit,
+  IBenefitData,
+  IBenefitParams,
+  IBenefitSearchFields,
+} from '../interfaces/IBenefit';
 import BenefitModel from '../models/BenefitModel';
 
 class BenefitService {
@@ -34,9 +39,16 @@ class BenefitService {
   }
 
   async list(data: IBenefitParams): Promise<PaginationModel<IDbBenefit>> {
-    const { page, limit, sort } = data;
+    const { name, page, limit, sort } = data;
+
+    const payload: IBenefitSearchFields = {};
+
+    if (name) {
+      payload.name = { $regex: new RegExp(name, 'i') };
+    }
 
     const options = {
+      query: payload,
       sort: { createdAt: sort },
       page,
       limit,

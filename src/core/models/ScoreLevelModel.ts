@@ -12,10 +12,10 @@ const ScoreLevelSchema = new mongoose.Schema<IDbScoreLevel>({
     type: Number,
     required: true,
   },
-  benifits: [
+  benefits: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Benifit',
+      ref: 'Benefit',
       required: false,
     },
   ],

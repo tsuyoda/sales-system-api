@@ -2,17 +2,17 @@ import { NextFunction, Request, Response } from 'express';
 
 import Controller from './Controller';
 import SharedValidator from '../validators/SharedValidator';
-import BenefitValidator from '../validators/BenefitValidator';
-import BenefitService from '../../core/services/BenefitService';
+import ScoreLevelValidator from '../validators/ScoreLevelValidator';
+import ScoreLevelService from '../../core/services/ScoreLevelService';
 
-class BenefitController extends Controller {
+class ScoreLevelController extends Controller {
   async create(req: Request, res: Response, next: NextFunction) {
     try {
-      const data = await BenefitValidator.create(req);
+      const data = await ScoreLevelValidator.create(req);
 
-      const benefit = await BenefitService.create(data);
+      const scoreLevel = await ScoreLevelService.create(data);
 
-      super.response(res, benefit);
+      super.response(res, scoreLevel);
     } catch (err) {
       next(err);
     }
@@ -20,11 +20,11 @@ class BenefitController extends Controller {
 
   async update(req: Request, res: Response, next: NextFunction) {
     try {
-      const { id, ...data } = await BenefitValidator.update(req);
+      const { id, ...data } = await ScoreLevelValidator.update(req);
 
-      const benefit = await BenefitService.update(id, data);
+      const scoreLevel = await ScoreLevelService.update(id, data);
 
-      super.response(res, benefit);
+      super.response(res, scoreLevel);
     } catch (err) {
       next(err);
     }
@@ -32,9 +32,9 @@ class BenefitController extends Controller {
 
   async list(req: Request, res: Response, next: NextFunction) {
     try {
-      const data = await BenefitValidator.list(req);
+      const data = await ScoreLevelValidator.list(req);
 
-      const { docs, ...paginator } = await BenefitService.list(data);
+      const { docs, ...paginator } = await ScoreLevelService.list(data);
 
       super.response(res, docs, 200, paginator);
     } catch (err) {
@@ -46,9 +46,9 @@ class BenefitController extends Controller {
     try {
       const { id } = await SharedValidator.paramId(req);
 
-      const benefit = await BenefitService.show(id);
+      const scoreLevel = await ScoreLevelService.show(id);
 
-      super.response(res, benefit);
+      super.response(res, scoreLevel);
     } catch (err) {
       next(err);
     }
@@ -58,13 +58,13 @@ class BenefitController extends Controller {
     try {
       const { id } = await SharedValidator.paramId(req);
 
-      const benefit = await BenefitService.delete(id);
+      const scoreLevel = await ScoreLevelService.delete(id);
 
-      super.response(res, benefit);
+      super.response(res, scoreLevel);
     } catch (err) {
       next(err);
     }
   }
 }
 
-export default new BenefitController();
+export default new ScoreLevelController();
