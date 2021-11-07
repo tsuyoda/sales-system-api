@@ -35,7 +35,7 @@ class ProductService {
     const product = await ProductModel.findByIdAndUpdate(id, data);
 
     if (!product) {
-      throw new ApiError(404, 'product not found');
+      throw new ApiError(404, `Produto de id ${id} não existe`);
     }
 
     if (product.value !== data.value) {
@@ -81,7 +81,7 @@ class ProductService {
     const product = await ProductModel.findById(id).populate('provider');
 
     if (!product) {
-      throw new ApiError(404, 'product not found');
+      throw new ApiError(404, `Produto de id ${id} não existe`);
     }
 
     return product;
@@ -91,7 +91,7 @@ class ProductService {
     const product = await ProductModel.findByIdAndDelete(id);
 
     if (!product) {
-      throw new ApiError(404, 'product not found');
+      throw new ApiError(404, `Produto de id ${id} não existe`);
     }
 
     return product;
@@ -101,10 +101,34 @@ class ProductService {
     const product = await ProductModel.findById(id);
 
     if (!product) {
-      throw new ApiError(404, 'product not found');
+      throw new ApiError(404, `Produto de id ${id} não existe`);
     }
 
     return ProductPriceModel.find({ product: product._id });
+  }
+
+  async decreaseStock(productId: string, quantity: number): Promise<void> {
+    const product = await ProductModel.findById(productId);
+
+    if (!product) {
+      throw new ApiError(404, `Produto de id ${productId} não existe`);
+    }
+
+    if (quantity > product.quantity) {
+      throw new ApiError(400, `Estoque insuficiente. Quantidade disponível: ${product.quantity}`);
+    }
+
+    await ProductModel.findByIdAndUpdate(productId, { quantity: product.quantity - quantity });
+  }
+
+  async increaseStock(productId: string, quantity: number): Promise<void> {
+    const product = await ProductModel.findById(productId);
+
+    if (!product) {
+      throw new ApiError(404, `Produto de id ${productId} não existe`);
+    }
+
+    await ProductModel.findByIdAndUpdate(productId, { quantity: product.quantity + quantity });
   }
 
   private async productDataValidation(data: IProductData, id: string = ''): Promise<void> {
