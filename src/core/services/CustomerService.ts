@@ -8,8 +8,29 @@ import {
 import CustomerModel from '../models/CustomerModel';
 import { Schema } from 'mongoose';
 import { PaginationModel } from 'mongoose-paginate-ts';
+import ScoreService from './ScoreService';
 
 class CustomerService {
+  async addCustomerPoints(id: string, points: number): Promise<void> {
+    const customer = await CustomerModel.findById(id);
+
+    if (!customer) {
+      throw new ApiError(404, 'customer not found');
+    }
+
+    if (!customer.participatePointsProgram) {
+      throw new ApiError(400, 'customer does not participate points program');
+    }
+
+    const score = await ScoreService.getScoreByCustomer(id);
+
+    if (!score) {
+      throw new ApiError(404, 'customer score not found');
+    }
+
+    await ScoreService.increasePoints(score._id, points);
+  }
+
   async create(data: ICustomerData): Promise<IDbCustomer> {
     await this.customerDataValidation(data);
 
