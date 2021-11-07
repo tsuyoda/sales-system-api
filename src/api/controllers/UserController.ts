@@ -4,7 +4,6 @@ import Controller from './Controller';
 import UserService from '../../core/services/UserService';
 import UserValidator from '../validators/UserValidator';
 import SharedValidator from '../validators/SharedValidator';
-import ApiError from '../../core/exceptions/ApiError';
 
 class UserController extends Controller {
   async create(req: Request, res: Response, next: NextFunction) {
@@ -51,22 +50,6 @@ class UserController extends Controller {
       const { id } = await SharedValidator.paramId(req);
 
       const user = await UserService.show(id);
-
-      super.response(res, user);
-    } catch (err) {
-      next(err);
-    }
-  }
-
-  async showMyProfile(req: Request, res: Response, next: NextFunction) {
-    try {
-      if (!req.user) {
-        throw new ApiError(403, 'Usuário não encontrado');
-      }
-
-      const { id } = req.user;
-
-      const user = await UserService.show(id.toString());
 
       super.response(res, user);
     } catch (err) {
