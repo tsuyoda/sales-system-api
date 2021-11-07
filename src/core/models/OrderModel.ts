@@ -26,6 +26,10 @@ const OrderValuesDocumentSchema = {
     type: Number,
     default: 0.0,
   },
+  delivery: {
+    type: Number,
+    required: true,
+  },
   total: {
     type: Number,
     required: true,
@@ -56,6 +60,7 @@ const OrderSchema = new mongoose.Schema<IDbOrder>({
   date: OrderDatesDocumentSchema,
   status: {
     type: String,
+    enum: ['new', 'pending', 'processed', 'canceled'],
     default: 'new',
   },
   seller: {
@@ -80,8 +85,8 @@ const AutoIncrement = AutoIncrementFactory(mongoose.connection);
 OrderSchema.plugin(mongoosePagination);
 OrderSchema.plugin(AutoIncrement, { inc_field: 'cod' });
 
-const SellerModel =
+const OrderModel =
   (mongoose.models.Order as Pagination<IDbOrder>) ||
   mongoose.model<IDbOrder, Pagination<IDbOrder>>('Order', OrderSchema);
 
-export default SellerModel;
+export default OrderModel;

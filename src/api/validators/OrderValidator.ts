@@ -9,6 +9,7 @@ class OrderValidator {
       value: Yup.object({
         totalItems: Yup.number().required(),
         totalDiscount: Yup.number().optional().default(0.0),
+        delivery: Yup.number().required(),
         total: Yup.number().required(),
       }).required(),
       discountPercentage: Yup.number().optional().default(0.0),
@@ -17,7 +18,6 @@ class OrderValidator {
         delivery: Yup.date().required(),
         payment: Yup.date().required(),
       }).required(),
-      status: Yup.string().required(),
       seller: Yup.string()
         .matches(new RegExp(REGEX_OBJECT_ID), 'seller must be a ObjectId')
         .required(),
@@ -51,6 +51,7 @@ class OrderValidator {
       value: Yup.object({
         totalItems: Yup.number().required(),
         totalDiscount: Yup.number().optional().default(0),
+        delivery: Yup.number().required(),
         total: Yup.number().required(),
       }).required(),
       discountPercentage: Yup.number().optional().default(0.0),
