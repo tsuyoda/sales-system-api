@@ -68,3 +68,24 @@ db.resources.findOne({ name: 'providers' }) ||
     translatedName: 'Fornecedores',
     availableActions: ['create', 'read', 'update', 'delete'],
   });
+
+db.resources.findOne({ name: 'scores' }) ||
+  db.resources.insertOne({
+    name: 'scores',
+    translatedName: 'Pontuações',
+    availableActions: ['create', 'read', 'update', 'delete'],
+  });
+
+db.resources.findOne({ name: 'scoreLevels' }) ||
+  db.resources.insertOne({
+    name: 'scoreLevels',
+    translatedName: 'Nível de pontuação',
+    availableActions: ['create', 'read', 'update', 'delete'],
+  });
+
+db.resources.findOne({ name: 'benefits' }) ||
+  db.resources.insertOne({
+    name: 'benefits',
+    translatedName: 'Benefícios',
+    availableActions: ['create', 'read', 'update', 'delete'],
+  });
