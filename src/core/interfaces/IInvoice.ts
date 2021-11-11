@@ -3,25 +3,71 @@ import { IDbOrder } from './IOrder';
 import { IDbCustomer } from './ICustomer';
 import { IDbProduct } from './IProduct';
 
+interface IInvoiceRecipient {
+  name: string;
+  cpfCnpj: string;
+  address: {
+    street: string;
+    number: number;
+    complement?: string;
+    city: string;
+    state: string;
+    postalCode: string;
+  };
+  contact: {
+    tel: string;
+  };
+}
+
 interface IInvoiceValue {
   totalItems: number;
   totalDiscount: number;
   freight: number;
   baseICMS: number;
   totalICMS: number;
-  incidentalExpenses: number;
   total: number;
 }
 
-export interface IDbInvoice extends Document {
-  series: string;
-  description?: string;
-  extraDetails?: string;
+export interface IInvoiceItem {
+  title: string;
+  sku: string;
+  quantity: number;
+  value: {
+    unitary: number;
+    subtotal: number;
+  };
+  product: string;
+}
+export interface IInvoiceData {
+  recipient: IInvoiceRecipient;
   paymentType: string;
-  UF: string;
+  value: IInvoiceValue;
+  order: string;
+  customer: string;
+  items: IInvoiceItem[];
+  dispatchedAt: Date;
+}
+
+export interface IInvoiceParams {
+  orderCod?: number;
+  customer?: string;
+  page?: number;
+  limit?: number;
+  sort?: string;
+}
+
+export interface IInvoiceSearchFields {
+  order?: string;
+  customer?: string;
+}
+export interface IDbInvoice extends Document {
+  recipient: IInvoiceRecipient;
+  paymentType: string;
   value: IInvoiceValue;
   order: string | Types.ObjectId | IDbOrder;
   customer: string | Types.ObjectId | IDbCustomer;
+  items: IInvoiceItem[];
+  dispatchedAt: Date;
   createdAt: Date;
 }
 

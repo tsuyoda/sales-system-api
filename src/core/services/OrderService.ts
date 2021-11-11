@@ -15,8 +15,71 @@ import ProductService from './ProductService';
 import CustomerService from './CustomerService';
 import OrderManagementService from './OrderManagementService';
 import { IDbCustomer } from '../interfaces/ICustomer';
+import InvoiceService from './InvoiceService';
+import { IDbInvoice, IInvoiceData } from '../interfaces/IInvoice';
+import { IDbProduct } from '../interfaces/IProduct';
 
 class OrderService {
+  async generateInvoice(id: string): Promise<IDbInvoice> {
+    const order = await OrderModel.findById(id).populate([
+      'customer',
+      { path: 'items', populate: 'product' },
+    ]);
+
+    if (!order) {
+      throw new ApiError(404, 'order not found');
+    }
+
+    const customer = order.customer as IDbCustomer;
+
+    if (order.issuedInvoice) {
+      throw new ApiError(400, 'invoice already issued');
+    }
+
+    if (!customer) {
+      throw new ApiError(400, 'failed to find customer');
+    }
+
+    const invoicePayload: IInvoiceData = {
+      recipient: {
+        name: customer.fullName,
+        cpfCnpj: customer.doc.id,
+        address: customer.address,
+        contact: {
+          tel: customer.contact.tel,
+        },
+      },
+      paymentType: order.paymentType,
+      value: {
+        totalItems: order.value.totalItems,
+        totalDiscount: order.value.totalDiscount,
+        freight: order.value.delivery,
+        total: order.value.total,
+        baseICMS: order.value.totalItems + order.value.delivery,
+        totalICMS: 0.0, // TODO ICMS
+      },
+      customer: customer._id,
+      order: order._id,
+      items: order.items.map(item => {
+        const product = item.product as IDbProduct;
+
+        return {
+          title: product.title,
+          sku: product.sku,
+          quantity: item.quantity,
+          value: item.value,
+          product: product._id.toString(),
+        };
+      }),
+      dispatchedAt: order.date.delivery,
+    };
+
+    const invoice = await InvoiceService.create(invoicePayload);
+    await OrderModel.findByIdAndUpdate(id, { issuedInvoice: true });
+
+    return invoice;
+  }
+
   async createRequest(id: string): Promise<void> {
     const order = await OrderModel.findById(id);
 
@@ -150,7 +213,17 @@ class OrderService {
   }
 
   async show(id: string): Promise<IDbOrder> {
-    const order = await OrderModel.findById(id).populate(['customer', 'seller']);
+    const order = await OrderModel.findById(id).populate([
+      'customer',
+      {
+        path: 'seller',
+        populate: 'user',
+      },
+      {
+        path: 'items',
+        populate: 'product',
+      },
+    ]);
 
     if (!order) {
       throw new ApiError(404, 'order not found');
@@ -171,14 +244,16 @@ class OrderService {
 
   private async decreaseProductsStock(items: IOrderItemData[]): Promise<void> {
     for (const index in items) {
+      const item = items[index];
+      const productId = typeof item.product === 'string' ? item.product : item.product._id;
+
       try {
-        const item = items[index];
-        await ProductService.decreaseStock(item.product, item.quantity);
+        await ProductService.decreaseStock(productId, item.quantity);
       } catch (err) {
         for (const rIndex in [...Array(index).keys()]) {
           const item = items[rIndex];
 
-          await ProductService.increaseStock(item.product, item.quantity);
+          await ProductService.increaseStock(productId, item.quantity);
         }
 
         throw err;
@@ -189,7 +264,8 @@ class OrderService {
   private async resetProductsStock(items: IOrderItemData[]): Promise<void> {
     for (const index in items) {
       const item = items[index];
-      await ProductService.increaseStock(item.product, item.quantity);
+      const productId = typeof item.product === 'string' ? item.product : item.product._id;
+      await ProductService.increaseStock(productId, item.quantity);
     }
   }
 
@@ -210,7 +286,8 @@ class OrderService {
     }
 
     const productsPromises = items.map(async item => {
-      const product = await ProductService.show(item.product);
+      const productId = typeof item.product === 'string' ? item.product : item.product._id;
+      const product = await ProductService.show(productId);
 
       if (!product) {
         throw new ApiError(400, `Produto de id ${item.product} não existe`);

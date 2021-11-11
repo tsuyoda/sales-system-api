@@ -6,6 +6,18 @@ import OrderService from '../../core/services/OrderService';
 import OrderValidator from '../validators/OrderValidator';
 
 class OrderController extends Controller {
+  async generateInvoice(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = await SharedValidator.paramId(req);
+
+      const order = await OrderService.generateInvoice(id);
+
+      super.response(res, order);
+    } catch (err) {
+      next(err);
+    }
+  }
+
   async create(req: Request, res: Response, next: NextFunction) {
     try {
       const data = await OrderValidator.create(req);

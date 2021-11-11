@@ -4,6 +4,12 @@ import { accessControl } from '../middlewares/auth';
 
 const orderRoutes = express.Router();
 
+orderRoutes.post(
+  '/:id/generate-invoice',
+  accessControl('create', 'orders'),
+  OrderController.generateInvoice
+);
+
 orderRoutes.post('/', accessControl('create', 'orders'), OrderController.create);
 orderRoutes.get('/:id', accessControl('read', 'orders'), OrderController.show);
 orderRoutes.get('/', accessControl('read', 'orders'), OrderController.list);

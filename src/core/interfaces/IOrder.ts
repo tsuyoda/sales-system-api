@@ -18,7 +18,7 @@ export interface IOrderItemData {
     unitary: number;
     subtotal: number;
   };
-  product: string;
+  product: string | IDbProduct;
 }
 
 export interface IOrderData {
@@ -45,11 +45,21 @@ export interface IOrderParams {
 }
 
 export interface IOrderManagementParams {
+  orderCod?: number;
+  seller?: string;
   order?: string;
   status?: string;
   page?: number;
   limit?: number;
   sort?: string;
+}
+
+export interface IOrderManagementSearchFields {
+  order?: {
+    $in: string[];
+  };
+  seller?: string;
+  status?: string;
 }
 
 export interface IOrderSearchFields {
@@ -79,6 +89,8 @@ export interface IDbOrder extends Document {
   seller: Types.ObjectId | string | IDbSeller;
   customer: Types.ObjectId | string | IDbCustomer;
   items: IOrderItemData[];
+  issuedInvoice: boolean;
+  cod: number;
   createdAt: Date;
 }
 

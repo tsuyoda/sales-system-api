@@ -62,8 +62,7 @@ const accessControl =
       if (!grants.length) {
         throw new ApiError(403, 'Você não possui permissão para executar esta ação.');
       }
-
-      const ac = new AccessControl(grants);
+      const ac = new AccessControl(grants.filter(grant => grant.resource !== 'orderManagement'));
 
       const permission = ac.can(role.name)[action](resource);
 

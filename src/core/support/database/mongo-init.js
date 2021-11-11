@@ -89,3 +89,10 @@ db.resources.findOne({ name: 'benefits' }) ||
     translatedName: 'Benefícios',
     availableActions: ['create', 'read', 'update', 'delete'],
   });
+
+db.resources.findOne({ name: 'orderManagement' }) ||
+  db.resources.insertOne({
+    name: 'orderManagement',
+    translatedName: 'Gerenciamento de pedidos',
+    availableActions: ['read', 'interact', 'notification'],
+  });

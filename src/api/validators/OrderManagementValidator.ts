@@ -17,6 +17,10 @@ class OrderManagementValidator {
 
   async list(req: Request) {
     const schema = Yup.object({
+      orderCod: Yup.number().integer().optional(),
+      seller: Yup.string()
+        .matches(new RegExp(REGEX_OBJECT_ID), 'seller must be a ObjectId')
+        .optional(),
       order: Yup.string()
         .matches(new RegExp(REGEX_OBJECT_ID), 'order must be a ObjectId')
         .optional(),

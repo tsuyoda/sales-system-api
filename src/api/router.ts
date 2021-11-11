@@ -16,6 +16,7 @@ import benefitRoutes from './routes/benefitRoutes';
 import scoreRoutes from './routes/scoreRoutes';
 import scoreLevelRoutes from './routes/scoreLevelRoutes';
 import orderManagementRoutes from './routes/orderManagementRoutes';
+import invoiceRoutes from './routes/invoiceRoutes';
 
 const router = express.Router();
 
@@ -38,6 +39,7 @@ router.use('/benefit', benefitRoutes);
 router.use('/score', scoreRoutes);
 router.use('/score-level', scoreLevelRoutes);
 router.use('/order-request', orderManagementRoutes);
+router.use('/invoice', invoiceRoutes);
 
 router.all('*', () => {
   throw new ApiError(404, 'Route not found');

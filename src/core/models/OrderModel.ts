@@ -74,6 +74,10 @@ const OrderSchema = new mongoose.Schema<IDbOrder>({
     required: true,
   },
   items: [OrderItemSchema],
+  issuedInvoice: {
+    type: Boolean,
+    default: false,
+  },
   createdAt: {
     type: Date,
     default: Date.now,
