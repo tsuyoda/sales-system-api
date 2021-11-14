@@ -52,6 +52,12 @@ class UserValidator {
       name: Yup.string().required(),
       fullName: Yup.string().required(),
       email: Yup.string().email().lowercase().required(),
+      password: Yup.string()
+        .matches(
+          new RegExp(REGEX_PASSWORD),
+          'Password must contain at least 8 characters, one uppercase, one number and one special case character'
+        )
+        .optional(),
       role: Yup.string().matches(new RegExp(REGEX_OBJECT_ID), 'role must be a ObjectId').required(),
       doc: docSchema,
       address: addressSchema,

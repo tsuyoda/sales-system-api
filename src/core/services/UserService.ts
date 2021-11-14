@@ -2,6 +2,7 @@ import ApiError from '../exceptions/ApiError';
 import { IDbUser, IUserData, IUserParams, IUserSearchFields } from '../interfaces/IUser';
 import UserModel from '../models/UserModel';
 import RoleModel from '../models/RoleModel';
+import bcrypt from 'bcrypt';
 import { Schema } from 'mongoose';
 import { PaginationModel } from 'mongoose-paginate-ts';
 
@@ -14,6 +15,10 @@ class UserService {
 
   async update(id: string, data: IUserData): Promise<IDbUser> {
     await this.userDataValidation(data, id);
+
+    if (data.password) {
+      data.password = await bcrypt.hash(data.password, 10);
+    }
 
     const user = await UserModel.findByIdAndUpdate(id, data);
 
