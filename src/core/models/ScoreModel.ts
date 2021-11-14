@@ -15,7 +15,7 @@ const ScoreSchema = new mongoose.Schema<IDbScore>({
   scoreLevel: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'ScoreLevel',
-    required: true,
+    required: false,
   },
   createdAt: {
     type: Date,

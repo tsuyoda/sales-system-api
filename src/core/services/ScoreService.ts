@@ -125,7 +125,7 @@ class ScoreService {
       throw new ApiError(400, `Cliente de id ${customer} não existe`);
     }
 
-    if (!(await ScoreLevelModel.findById(scoreLevel))) {
+    if (scoreLevel && !(await ScoreLevelModel.findById(scoreLevel))) {
       throw new ApiError(400, `Nível de id ${scoreLevel} não existe`);
     }
   }

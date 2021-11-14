@@ -9,6 +9,7 @@ import CustomerModel from '../models/CustomerModel';
 import { Schema } from 'mongoose';
 import { PaginationModel } from 'mongoose-paginate-ts';
 import ScoreService from './ScoreService';
+import ScoreModel from '../models/ScoreModel';
 
 class CustomerService {
   async addCustomerPoints(id: string, points: number): Promise<void> {
@@ -34,7 +35,16 @@ class CustomerService {
   async create(data: ICustomerData): Promise<IDbCustomer> {
     await this.customerDataValidation(data);
 
-    return CustomerModel.create(data);
+    const customer = await CustomerModel.create(data);
+
+    if (data.participatePointsProgram) {
+      await ScoreService.create({
+        points: 0,
+        customer: customer._id,
+      });
+    }
+
+    return customer;
   }
 
   async update(id: string, data: ICustomerData): Promise<IDbCustomer> {
@@ -44,6 +54,21 @@ class CustomerService {
 
     if (!customer) {
       throw new ApiError(404, 'customer not found');
+    }
+
+    const score = await ScoreModel.findOne({ customer: customer._id });
+
+    if (data.participatePointsProgram) {
+      if (!score) {
+        await ScoreService.create({
+          points: 0,
+          customer: customer._id,
+        });
+      }
+    } else {
+      if (score) {
+        await ScoreService.delete(score._id);
+      }
     }
 
     return customer;

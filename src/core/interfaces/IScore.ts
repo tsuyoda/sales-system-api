@@ -5,7 +5,7 @@ import { IDbBenefit } from './IBenefit';
 export interface IScoreData {
   points: number;
   customer: string;
-  scoreLevel: string;
+  scoreLevel?: string;
 }
 
 export interface IScoreLevelData {
